@@ -13,7 +13,9 @@ import Button from '../components/Button';
 import IconFA from 'react-native-vector-icons/FontAwesome';
 
 const Signup = () => {
+  const [email, onChangeEmail] = React.useState(null);
   const [number, onChangeNumber] = React.useState(null);
+  const [password, onChangePassword] = React.useState(null);
   return (
     <View style={styles.container}>
       <ImageBackground source={signup} resizeMode="cover" style={styles.image}>
@@ -21,22 +23,24 @@ const Signup = () => {
         <SafeAreaView style={styles.form}>
           <TextInput
             style={styles.input}
-            onChangeText={onChangeNumber}
-            value={number}
+            onChangeText={onChangeEmail}
+            value={email}
             placeholder="Email"
+            keyboardType="email-address"
           />
           <TextInput
             style={styles.input}
             onChangeText={onChangeNumber}
             value={number}
+            keyboardType="numeric"
             placeholder="Mobile Phone"
           />
           <TextInput
             style={styles.input}
-            onChangeText={onChangeNumber}
-            value={number}
+            onChangeText={onChangePassword}
+            secureTextEntry={true}
+            value={password}
             placeholder="Password"
-            keyboardType="numeric"
           />
         </SafeAreaView>
         <View style={styles.login}>
