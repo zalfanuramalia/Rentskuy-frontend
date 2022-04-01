@@ -13,6 +13,7 @@ import Login from './src/screens/Login';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
+import Icons from 'react-native-vector-icons/FontAwesome5';
 import UpdateProfile from './src/screens/UpdateProfile';
 
 const MainStack = createNativeStackNavigator();
@@ -49,10 +50,46 @@ const MainNav = () => {
         //   return <Icon name="md-home" color="black" size="50" />;
         // },
       }}>
-      <BottomTab.Screen name="Home Page" component={HomeStackNav} />
-      <BottomTab.Screen name="Search" component={Search} />
-      <BottomTab.Screen name="Histories" component={HistoryStackNav} />
-      <BottomTab.Screen name="Profile" component={Profile} />
+      <BottomTab.Screen
+        options={{
+          tabBarIcon: ({focused, color, size}) => (
+            <Icons name="home" color={color} size={size} />
+          ),
+          tabBarShowLabel: false,
+        }}
+        name="Home Page"
+        component={HomeStackNav}
+      />
+      <BottomTab.Screen
+        options={{
+          tabBarIcon: ({focused, color, size}) => (
+            <Icons name="search" color={color} size={size} />
+          ),
+          tabBarShowLabel: false,
+        }}
+        name="Search"
+        component={Search}
+      />
+      <BottomTab.Screen
+        options={{
+          tabBarIcon: ({focused, color, size}) => (
+            <Icons name="th-list" color={color} size={size} />
+          ),
+          tabBarShowLabel: false,
+        }}
+        name="Histories"
+        component={HistoryStackNav}
+      />
+      <BottomTab.Screen
+        options={{
+          tabBarIcon: ({focused, color, size}) => (
+            <Icons name="user" color={color} size={size} />
+          ),
+          tabBarShowLabel: false,
+        }}
+        name="Profile"
+        component={Profile}
+      />
     </BottomTab.Navigator>
   );
 };
