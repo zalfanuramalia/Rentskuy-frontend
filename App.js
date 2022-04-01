@@ -7,6 +7,7 @@ import ChatList from './src/screens/ChatList';
 import History from './src//screens/History';
 import Search from './src/screens/Search';
 import Profile from './src/screens/Profile';
+import Detail from './src/screens/Detail';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Login from './src/screens/Login';
@@ -102,6 +103,7 @@ const App = () => {
         {/* <Stack.Screen name="Login" component={Login} /> */}
         <MainStack.Screen name="BottomTab" component={MainNav} />
         <MainStack.Screen name="Update Profile" component={UpdateProfile} />
+        <MainStack.Screen name="Details" component={Detail} />
       </MainStack.Navigator>
     </NavigationContainer>
   );
