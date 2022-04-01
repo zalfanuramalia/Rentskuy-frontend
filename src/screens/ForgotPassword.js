@@ -8,56 +8,40 @@ import {
   Alert,
 } from 'react-native';
 import React from 'react';
-import {signup} from '../image/index';
+import {fp} from '../image/index';
 import Button from '../components/Button';
-import IconFA from 'react-native-vector-icons/FontAwesome';
 
 const Signup = () => {
-  const [email, onChangeEmail] = React.useState(null);
   const [number, onChangeNumber] = React.useState(null);
-  const [password, onChangePassword] = React.useState(null);
   return (
     <View style={styles.container}>
-      <ImageBackground source={signup} resizeMode="cover" style={styles.image}>
-        <Text style={styles.text}>LET’S HAVE SOME RIDE</Text>
+      <ImageBackground source={fp} resizeMode="cover" style={styles.image}>
+        <Text style={styles.text}>THAT’S OKAY, WE GOT YOUR BACK</Text>
         <SafeAreaView style={styles.form}>
-          <TextInput
-            style={styles.input}
-            onChangeText={onChangeEmail}
-            value={email}
-            placeholder="Email"
-            keyboardType="email-address"
-          />
+          <Text style={styles.fp}>
+            Enter your email to get reset password code
+          </Text>
           <TextInput
             style={styles.input}
             onChangeText={onChangeNumber}
             value={number}
-            keyboardType="numeric"
-            placeholder="Mobile Phone"
-          />
-          <TextInput
-            style={styles.input}
-            onChangeText={onChangePassword}
-            secureTextEntry={true}
-            value={password}
-            placeholder="Password"
+            placeholder="Enter your email address"
           />
         </SafeAreaView>
         <View style={styles.login}>
           <Button
             style={styles.buttons}
-            title="Sign Up"
+            title="Send Code"
             onPress={() => Alert.alert('Login Success')}
           />
         </View>
         <View style={styles.google}>
           <Button
             style={`${styles.buttons} `}
-            title="Sign up with Google"
+            title="Resend Code"
             onPress={() => Alert.alert('Login Success')}
           />
         </View>
-        <Text style={styles.signup}>Already have an account? Login now</Text>
       </ImageBackground>
     </View>
   );
@@ -76,11 +60,9 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto',
     lineHeight: 42,
     fontWeight: '900',
-    textAlign: 'justify',
-    marginVertical: 10,
-    marginHorizontal: 25,
+    textAlign: 'center',
     marginTop: 100,
-    marginEnd: 100,
+    marginHorizontal: 30,
   },
   input: {
     margin: 5,
@@ -90,9 +72,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#DFDEDE',
     opacity: 0.5,
     height: 50,
+    marginTop: 20,
   },
   form: {
-    marginTop: 150,
+    marginTop: 180,
   },
   login: {
     marginHorizontal: 8,
@@ -107,10 +90,10 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     padding: 100,
   },
-  signup: {
+  fp: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginHorizontal: 70,
+    marginHorizontal: 50,
     marginTop: 20,
     color: 'white',
   },
