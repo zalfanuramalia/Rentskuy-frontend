@@ -123,7 +123,7 @@ const Home = () => {
                 <Button
                   style={styles.buttons}
                   title="Search Vehicle"
-                  onPress={() => navigation.navigate('Filter')}
+                  onPress={() => navigation.navigate('Category')}
                 />
               </TouchableOpacity>
             </VStack>
