@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import React from 'react';
 import {people} from '../image/index';
 import {
@@ -9,46 +9,87 @@ import {
   Container,
   HStack,
   Pressable,
+  ScrollView,
+  Stack,
 } from 'native-base';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import {useNavigation} from '@react-navigation/native';
+import Button from '../components/Button';
 
 const Profile = () => {
+  const navigation = useNavigation();
   return (
     <NativeBaseProvider>
-      <Box
-        shadow="2"
-        py="4"
-        px="3"
-        rounded="md"
-        height={200}
-        maxWidth="100%"
-        style={styles.texts}>
-        <HStack>
-          <Box justifyContent="space-between">
-            <VStack space="2">
-              <Text fontSize="sm" color="white">
-                Today @ 9PM
-              </Text>
-              <Text color="white" fontSize="xl">
-                Let's talk about avatar!
-              </Text>
-            </VStack>
-            <Pressable
-              rounded="xs"
-              bg="primary.400"
-              alignSelf="flex-start"
-              py="1"
-              px="3">
-              <Text
-                textTransform="uppercase"
-                fontSize="sm"
-                fontWeight="bold"
-                color="white">
-                Remind me
-              </Text>
-            </Pressable>
+      <SafeAreaView>
+        <ScrollView>
+          <Box
+            shadow="2"
+            py="4"
+            px="3"
+            rounded="md"
+            height={100}
+            maxWidth="100%"
+            style={styles.texts}>
+            <HStack>
+              <Box alignItems="center" style={styles.profile}>
+                {/* <Stack direction="row" space={3} alignItems="center"> */}
+                <Image
+                  source={require('../../images/people-1.png')}
+                  resizeMode="cover"
+                  style={styles.profileImg}
+                />
+                <Text color="white" fontSize="xl" style={styles.name}>
+                  Samantha Doe
+                </Text>
+                {/* </Stack> */}
+                {/* <Pressable
+                  rounded="xs"
+                  bg="primary.400"
+                  alignSelf="flex-start"
+                  py="1"
+                  px="3">
+                  <Text
+                    textTransform="uppercase"
+                    fontSize="sm"
+                    fontWeight="bold"
+                    color="white">
+                    Remind me
+                  </Text>
+                </Pressable> */}
+              </Box>
+            </HStack>
           </Box>
-        </HStack>
-      </Box>
+          <TouchableOpacity>
+            <View style={styles.viewmore}>
+              <Text style={styles.text}>Your Favourites</Text>
+              <Icon name="chevron-right" size={20} />
+            </View>
+          </TouchableOpacity>
+          <View style={styles.viewmore}>
+            <Text style={styles.text}>FAQ</Text>
+            <Icon name="chevron-right" size={20} />
+          </View>
+          <View style={styles.viewmore}>
+            <Text style={styles.text}>Help</Text>
+            <Icon name="chevron-right" size={20} />
+          </View>
+          <TouchableOpacity
+            onPressIn={() => navigation.navigate('Update Profile')}>
+            <View style={styles.viewmore}>
+              <Text style={styles.text}>Update Profile</Text>
+              <Icon name="chevron-right" size={20} />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.textinput}>
+            <Button
+              style={styles.buttons}
+              title="Logout"
+              onPress={() => navigation.navigate('Home Page')}
+            />
+          </TouchableOpacity>
+        </ScrollView>
+      </SafeAreaView>
     </NativeBaseProvider>
   );
 };
@@ -58,6 +99,39 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  profileImg: {
+    borderRadius: 40,
+  },
+  profile: {
+    flex: 1,
+    flexDirection: 'row',
+  },
+  name: {
+    marginHorizontal: 20,
+    fontSize: 18,
+  },
+  viewmore: {
+    flex: 1,
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 20,
+    paddingHorizontal: 10,
+  },
+  text: {
+    paddingHorizontal: 10,
+    fontSize: 20,
+  },
+  buttons: {
+    borderRadius: 5,
+    padding: 100,
+  },
+  textinput: {
+    marginHorizontal: 15,
+    marginVertical: 15,
+    marginTop: 350,
   },
 });
 // const styles = StyleSheet.create({

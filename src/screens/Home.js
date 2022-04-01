@@ -81,8 +81,8 @@ const Home = () => {
                     style={styles.input}
                   />
                 </Box>
-                {/* <Box>
-                  <Select
+                <Box>
+                  {/* <Select
                     selectedValue={service}
                     minWidth="200"
                     accessibilityLabel="Choose Service"
@@ -92,9 +92,12 @@ const Home = () => {
                       endIcon: <Octicons name="triangle-down" size="5" />,
                     }}
                     mt={1}
-                    onValueChange={itemValue => setService(itemValue)}
-                    style={styles.input}>
-                    <Select.Item label="UX Research" value="ux" />
+                    onValueChange={itemValue => setService(itemValue)}>
+                    <Select.Item
+                      label="UX Research"
+                      value="ux"
+                      backgroundColor="black"
+                    />
                     <Select.Item label="Web Development" value="web" />
                     <Select.Item
                       label="Cross Platform Development"
@@ -102,8 +105,8 @@ const Home = () => {
                     />
                     <Select.Item label="UI Designing" value="ui" />
                     <Select.Item label="Backend Development" value="backend" />
-                  </Select>
-                </Box> */}
+                  </Select> */}
+                </Box>
               </View>
               <Box
                 border="1"

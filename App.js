@@ -13,6 +13,7 @@ import Login from './src/screens/Login';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
+import UpdateProfile from './src/screens/UpdateProfile';
 
 const MainStack = createNativeStackNavigator();
 const HomeStack = createNativeStackNavigator();
@@ -63,6 +64,7 @@ const App = () => {
         {/* <Stack.Screen name="Home" component={Home} /> */}
         {/* <Stack.Screen name="Login" component={Login} /> */}
         <MainStack.Screen name="BottomTab" component={MainNav} />
+        <MainStack.Screen name="Update Profile" component={UpdateProfile} />
       </MainStack.Navigator>
     </NavigationContainer>
   );
