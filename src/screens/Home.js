@@ -131,13 +131,15 @@ const Home = () => {
           </Box>
           <SafeAreaView>
             <ScrollView>
-              <View style={styles.nav}>
+              <TouchableOpacity
+                style={styles.nav}
+                onPress={() => navigation.navigate('Details')}>
                 <Text style={styles.recommend}>Recommended</Text>
                 <View style={styles.viewmore}>
                   <Text style={styles.text}>View more</Text>
                   <Icon name="chevron-right" size={20} />
                 </View>
-              </View>
+              </TouchableOpacity>
               <FlatList
                 data={data}
                 renderItem={renderItem}

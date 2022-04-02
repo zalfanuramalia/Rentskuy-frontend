@@ -7,39 +7,49 @@ import {
   TextInput,
   Alert,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {login} from '../image/index';
 import Button from '../components/Button';
 import IconFA from 'react-native-vector-icons/FontAwesome';
+import {useDispatch, useSelector} from 'react-redux';
+import onLogin from '../redux/actions/auth';
 
 const Login = () => {
-  const [number, onChangeNumber] = React.useState(null);
+  const auth = useSelector(state => state.auth);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const dispatch = useDispatch();
+
+  const goLogin = () => {
+    dispatch(onLogin(username, password));
+  };
   return (
     <View style={styles.container}>
       <ImageBackground source={login} resizeMode="cover" style={styles.image}>
         <Text style={styles.text}>LET’S EXPLORE THE WORLDS</Text>
         <SafeAreaView style={styles.form}>
+          {auth.err && (
+            <View style={styles.err}>
+              <Text style={styles.texterr}>{auth.errMsg}</Text>
+            </View>
+          )}
           <TextInput
             style={styles.input}
-            onChangeText={onChangeNumber}
-            value={number}
+            onChangeText={setUsername}
+            value={username}
             placeholder="Username"
           />
           <TextInput
             style={styles.input}
-            onChangeText={onChangeNumber}
-            value={number}
+            onChangeText={setPassword}
+            value={password}
+            secureTextEntry={true}
             placeholder="Password"
-            keyboardType="numeric"
           />
           <Text style={styles.forgot}>Forgot Password ?</Text>
         </SafeAreaView>
         <View style={styles.login}>
-          <Button
-            style={styles.buttons}
-            title="Login"
-            onPress={() => Alert.alert('Login Success')}
-          />
+          <Button style={styles.buttons} title="Login" onPress={goLogin} />
         </View>
         <View style={styles.google}>
           <Button
@@ -83,7 +93,7 @@ const styles = StyleSheet.create({
     height: 50,
   },
   form: {
-    marginTop: 200,
+    marginTop: 100,
   },
   forgot: {
     color: 'white',
@@ -115,6 +125,20 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginHorizontal: 80,
     marginTop: 20,
+  },
+  err: {
+    backgroundColor: 'gray',
+    borderWidth: 1,
+    borderColor: 'black',
+    padding: 15,
+    marginHorizontal: 15,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  texterr: {
+    color: 'white',
   },
 });
 
