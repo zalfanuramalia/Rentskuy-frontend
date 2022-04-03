@@ -93,7 +93,7 @@ const Detail = () => {
                     name="chatbubble-outline"
                     style={styles.chat}
                     size={30}
-                    color="yellow"
+                    color="#FFCD61"
                   />
                 </Box>
               </Box>
@@ -106,12 +106,12 @@ const Detail = () => {
               </Box>
 
               <Box style={styles.infoWrapper}>
-                <Icon name="map-marker-alt" style={styles.mapMarker} />
+                <Icon name="map-marker-alt" style={styles.mapWrapper} />
                 <Text style={styles.location}>Jakarta</Text>
               </Box>
 
               <Box style={styles.infoWrapper}>
-                <Icon name="walking" style={styles.mapMarker} />
+                <Icon name="walking" style={styles.mapWrapper} />
                 <Text style={styles.location}>
                   3.2 miles from your location
                 </Text>
@@ -124,9 +124,7 @@ const Detail = () => {
                     <Icon name="minus" style={styles.counterIcon} />
                   </TouchableHighlight>
                   <Text style={styles.countNumber}>2</Text>
-                  <TouchableHighlight
-                    // onPress={decreaseItem}
-                    style={styles.counterBtn}>
+                  <TouchableHighlight style={styles.counterBtn}>
                     <Icon name="plus" style={styles.counterIcon} />
                   </TouchableHighlight>
                 </Box>
@@ -155,7 +153,12 @@ const Detail = () => {
                 </Box>
               </Box>
               <Button
-                styleContainer={styles.reservationBtn}
+                style={styles.reservationBtn}
+                variant="solid"
+                _text={{
+                  color: 'black',
+                  fontSize: '2xl',
+                }}
                 onPress={() => navigation.navigate('Reservation')}>
                 Reservation
               </Button>
@@ -238,6 +241,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
     flexDirection: 'row',
     alignItems: 'center',
+    fontSize: 16,
   },
   counterSection: {
     marginTop: 16,
@@ -256,6 +260,9 @@ const styles = StyleSheet.create({
   counterWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  location: {
+    paddingHorizontal: 10,
   },
   datePickerWrapper: {
     marginTop: 24,
@@ -286,6 +293,11 @@ const styles = StyleSheet.create({
   },
   placeholder: {
     flex: 1,
+  },
+  reservationBtn: {
+    borderRadius: 10,
+    marginTop: 10,
+    backgroundColor: 'wheat',
   },
 });
 

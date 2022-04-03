@@ -59,9 +59,6 @@ const MainNav = () => {
     <BottomTab.Navigator
       screenOptions={{
         headerShown: false,
-        // tabBarIcon: ({color, size}) => {
-        //   return <Icon name="md-home" color="black" size="50" />;
-        // },
       }}>
       <BottomTab.Screen
         options={{
