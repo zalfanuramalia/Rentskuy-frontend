@@ -68,65 +68,72 @@ const Home = () => {
         />
         <View style={styles.search}>
           <Box shadow="1" borderTopRadius={20} style={styles.box}>
-            <VStack>
-              <View>
-                <Box
-                  border="1"
-                  shadow="1"
-                  borderRadius="10"
-                  style={styles.textinput}>
-                  <TextInput
-                    name="location"
-                    placeholder="Search Location"
-                    style={styles.input}
-                  />
-                </Box>
-                <Box>
-                  {/* <Select
-                    selectedValue={service}
-                    minWidth="200"
-                    accessibilityLabel="Choose Service"
-                    placeholder="Choose Service"
-                    _selectedItem={{
-                      bg: 'teal.600',
-                      endIcon: <Octicons name="triangle-down" size="5" />,
-                    }}
-                    mt={1}
-                    onValueChange={itemValue => setService(itemValue)}>
-                    <Select.Item
-                      label="UX Research"
-                      value="ux"
-                      backgroundColor="black"
-                    />
-                    <Select.Item label="Web Development" value="web" />
-                    <Select.Item
-                      label="Cross Platform Development"
-                      value="cross"
-                    />
-                    <Select.Item label="UI Designing" value="ui" />
-                    <Select.Item label="Backend Development" value="backend" />
-                  </Select> */}
-                </Box>
-              </View>
-              <Box
-                border="1"
-                shadow="1"
-                borderRadius="10"
-                style={styles.textinput}>
-                <TextInput
-                  name="date"
-                  placeholder="Search Date"
-                  style={styles.input}
+            <View style={styles.box1}>
+              <TextInput
+                name="location"
+                placeholder="Search Location"
+                placeholderTextColor="grey"
+                style={styles.input}
+              />
+              <Select
+                selectedValue={service}
+                minWidth="70"
+                accessibilityLabel="Choose Service"
+                placeholder="Car"
+                placeholderTextColor="white"
+                _selectedItem={{
+                  endIcon: <Octicons name="triangle-down" size="10" />,
+                  backgroundBlendMode: 'white',
+                }}
+                mt={1}
+                onValueChange={itemValue => setService(itemValue)}>
+                <Select.Item
+                  label="UX Research"
+                  value="ux"
+                  backgroundColor="grey"
                 />
-              </Box>
-              <TouchableOpacity style={styles.textinput}>
-                <Button
-                  style={styles.buttons}
-                  title="Search Vehicle"
-                  onPress={() => navigation.navigate('Category')}
+                <Select.Item label="Web Development" value="web" />
+                <Select.Item label="Cross Platform Development" value="cross" />
+                <Select.Item label="UI Designing" value="ui" />
+                <Select.Item label="Backend Development" value="backend" />
+              </Select>
+            </View>
+            <View style={styles.box1}>
+              <TextInput
+                name="location"
+                placeholder="Search Date"
+                placeholderTextColor="grey"
+                style={styles.input}
+              />
+              <Select
+                selectedValue={service}
+                minWidth="70"
+                accessibilityLabel="Choose Service"
+                placeholder="1 Day"
+                placeholderTextColor="white"
+                _selectedItem={{
+                  endIcon: <Octicons name="triangle-down" size="10" />,
+                }}
+                mt={1}
+                onValueChange={itemValue => setService(itemValue)}>
+                <Select.Item
+                  label="UX Research"
+                  value="ux"
+                  backgroundColor="grey"
                 />
-              </TouchableOpacity>
-            </VStack>
+                <Select.Item label="Web Development" value="web" />
+                <Select.Item label="Cross Platform Development" value="cross" />
+                <Select.Item label="UI Designing" value="ui" />
+                <Select.Item label="Backend Development" value="backend" />
+              </Select>
+            </View>
+            <TouchableOpacity style={styles.textinput}>
+              <Button
+                style={styles.buttons}
+                title="Search Vehicle"
+                onPress={() => navigation.navigate('Category')}
+              />
+            </TouchableOpacity>
             <View />
           </Box>
           <SafeAreaView>
@@ -169,9 +176,20 @@ const styles = StyleSheet.create({
   box: {
     backgroundColor: '#393939',
   },
+  box1: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   input: {
-    color: 'white',
-    paddingHorizontal: 15,
+    marginTop: 10,
+    padding: 15,
+    borderRadius: 10,
+    backgroundColor: '#DFDEDE',
+    opacity: 0.5,
+    height: 50,
+    width: 220,
+    marginHorizontal: 7,
   },
   textinput: {
     marginHorizontal: 15,

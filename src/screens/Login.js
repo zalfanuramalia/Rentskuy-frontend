@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   TextInput,
   Alert,
+  TouchableOpacity,
 } from 'react-native';
 import React, {useState} from 'react';
 import {login} from '../image/index';
@@ -13,12 +14,16 @@ import Button from '../components/Button';
 import IconFA from 'react-native-vector-icons/FontAwesome';
 import {useDispatch, useSelector} from 'react-redux';
 import onLogin from '../redux/actions/auth';
+import {useNavigation} from '@react-navigation/native';
+import allStyles from '../assets/allStyles';
 
 const Login = () => {
   const auth = useSelector(state => state.auth);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
+
+  const navigation = useNavigation();
 
   const goLogin = () => {
     dispatch(onLogin(username, password));
@@ -38,6 +43,7 @@ const Login = () => {
             onChangeText={setUsername}
             value={username}
             placeholder="Username"
+            placeholderTextColor="grey"
           />
           <TextInput
             style={styles.input}
@@ -45,8 +51,12 @@ const Login = () => {
             value={password}
             secureTextEntry={true}
             placeholder="Password"
+            placeholderTextColor="grey"
           />
-          <Text style={styles.forgot}>Forgot Password ?</Text>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Forgot Password')}>
+            <Text style={styles.forgot}>Forgot Password ?</Text>
+          </TouchableOpacity>
         </SafeAreaView>
         <View style={styles.login}>
           <Button style={styles.buttons} title="Login" onPress={goLogin} />
@@ -58,7 +68,13 @@ const Login = () => {
             onPress={() => Alert.alert('Login Success')}
           />
         </View>
-        <Text style={styles.signup}>Dont have account? Sign up now</Text>
+        <View style={styles.signup}>
+          <Text style={styles.textlink}>Dont have account? </Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+            <Text style={styles.link}>Sign up </Text>
+          </TouchableOpacity>
+          <Text style={styles.textlink}>now</Text>
+        </View>
       </ImageBackground>
     </View>
   );
@@ -85,7 +101,6 @@ const styles = StyleSheet.create({
   },
   input: {
     margin: 12,
-    borderWidth: 1,
     padding: 10,
     borderRadius: 10,
     backgroundColor: '#DFDEDE',
@@ -110,6 +125,7 @@ const styles = StyleSheet.create({
   },
   login: {
     marginHorizontal: 15,
+    marginVertical: 15,
   },
   google: {
     marginHorizontal: 15,
@@ -122,9 +138,21 @@ const styles = StyleSheet.create({
   },
   signup: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     marginHorizontal: 80,
-    marginTop: 20,
+    marginTop: 15,
+    alignItems: 'center',
+    color: 'white',
+  },
+  textlink: {
+    color: 'white',
+  },
+  link: {
+    color: 'white',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    borderBottomWidth: 0.5,
+    borderBottomColor: 'white',
   },
   err: {
     backgroundColor: 'gray',

@@ -16,6 +16,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Login from './src/screens/Login';
 import Signup from './src/screens/Signup';
+import ForgotPassword from './src/screens/ForgotPassword';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -147,14 +148,31 @@ const Main = () => {
       <NavigationContainer>
         {auth.token === null && (
           <StackAuth.Navigator>
-            <StackAuth.Screen name="Login" component={Login} />
-            <StackAuth.Screen name="Register" component={Signup} />
+            <StackAuth.Screen
+              options={{
+                headerShown: false,
+              }}
+              name="Login"
+              component={Login}
+            />
+            <StackAuth.Screen
+              options={{
+                headerShown: false,
+              }}
+              name="Register"
+              component={Signup}
+            />
+            <StackAuth.Screen
+              options={{
+                headerShown: false,
+              }}
+              name="Forgot Password"
+              component={ForgotPassword}
+            />
           </StackAuth.Navigator>
         )}
         {auth.token !== null && (
           <MainStack.Navigator screenOptions={{headerShown: false}}>
-            {/* <Stack.Screen name="Home" component={Home} /> */}
-            {/* <Stack.Screen name="Login" component={Login} /> */}
             <MainStack.Screen name="BottomTab" component={MainNav} />
             <MainStack.Screen name="Update Profile" component={UpdateProfile} />
             <MainStack.Screen name="Details" component={Detail} />

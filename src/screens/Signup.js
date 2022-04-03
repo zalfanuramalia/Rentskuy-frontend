@@ -6,16 +6,20 @@ import {
   SafeAreaView,
   TextInput,
   Alert,
+  TouchableOpacity,
 } from 'react-native';
 import React from 'react';
 import {signup} from '../image/index';
 import Button from '../components/Button';
 import IconFA from 'react-native-vector-icons/FontAwesome';
+import {useNavigation} from '@react-navigation/native';
 
 const Signup = () => {
   const [email, onChangeEmail] = React.useState(null);
   const [number, onChangeNumber] = React.useState(null);
   const [password, onChangePassword] = React.useState(null);
+
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <ImageBackground source={signup} resizeMode="cover" style={styles.image}>
@@ -27,6 +31,7 @@ const Signup = () => {
             value={email}
             placeholder="Email"
             keyboardType="email-address"
+            placeholderTextColor="grey"
           />
           <TextInput
             style={styles.input}
@@ -34,6 +39,7 @@ const Signup = () => {
             value={number}
             keyboardType="numeric"
             placeholder="Mobile Phone"
+            placeholderTextColor="grey"
           />
           <TextInput
             style={styles.input}
@@ -41,6 +47,7 @@ const Signup = () => {
             secureTextEntry={true}
             value={password}
             placeholder="Password"
+            placeholderTextColor="grey"
           />
         </SafeAreaView>
         <View style={styles.login}>
@@ -57,7 +64,13 @@ const Signup = () => {
             onPress={() => Alert.alert('Login Success')}
           />
         </View>
-        <Text style={styles.signup}>Already have an account? Login now</Text>
+        <View style={styles.signup}>
+          <Text style={styles.textlink}>Already have an account? </Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+            <Text style={styles.link}>Login </Text>
+          </TouchableOpacity>
+          <Text style={styles.textlink}>now</Text>
+        </View>
       </ImageBackground>
     </View>
   );
@@ -84,7 +97,6 @@ const styles = StyleSheet.create({
   },
   input: {
     margin: 5,
-    borderWidth: 1,
     padding: 10,
     borderRadius: 10,
     backgroundColor: '#DFDEDE',
@@ -109,10 +121,21 @@ const styles = StyleSheet.create({
   },
   signup: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginHorizontal: 70,
-    marginTop: 20,
+    justifyContent: 'center',
+    marginHorizontal: 80,
+    marginTop: 15,
+    alignItems: 'center',
     color: 'white',
+  },
+  textlink: {
+    color: 'white',
+  },
+  link: {
+    color: 'white',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    borderBottomWidth: 0.5,
+    borderBottomColor: 'white',
   },
 });
 
