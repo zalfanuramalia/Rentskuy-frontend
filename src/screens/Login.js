@@ -8,7 +8,7 @@ import {
   Alert,
   TouchableOpacity,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {login} from '../image/index';
 import Button from '../components/Button';
 import IconFA from 'react-native-vector-icons/FontAwesome';
@@ -19,14 +19,26 @@ import allStyles from '../assets/allStyles';
 
 const Login = () => {
   const auth = useSelector(state => state.auth);
-  const [username, setUsername] = useState('');
+  // const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
 
   const navigation = useNavigation();
 
+  useEffect(() => {
+    dispatch({
+      type: 'CLEAR_ERR',
+    });
+  }, [dispatch]);
+
   const goLogin = () => {
-    dispatch(onLogin(username, password));
+    // e.preventDefault();
+    // var username = e.target.elements.username.value;
+    // var password = e.target.elements.password.value;
+    // const data = {email, password};
+    dispatch(onLogin(email, password));
+    // dispatch(onLogin(username, password));
   };
   return (
     <View style={styles.container}>
@@ -40,9 +52,9 @@ const Login = () => {
           )}
           <TextInput
             style={styles.input}
-            onChangeText={setUsername}
-            value={username}
-            placeholder="Username"
+            onChangeText={setEmail}
+            value={email}
+            placeholder="Email"
             placeholderTextColor="grey"
           />
           <TextInput

@@ -82,7 +82,7 @@ const Home = () => {
                 placeholder="Car"
                 placeholderTextColor="white"
                 _selectedItem={{
-                  endIcon: <Octicons name="triangle-down" size="10" />,
+                  endIcon: <Octicons name="triangle-down" size={10} />,
                   backgroundBlendMode: 'white',
                 }}
                 mt={1}
@@ -112,7 +112,7 @@ const Home = () => {
                 placeholder="1 Day"
                 placeholderTextColor="white"
                 _selectedItem={{
-                  endIcon: <Octicons name="triangle-down" size="10" />,
+                  endIcon: <Octicons name="triangle-down" size={10} />,
                 }}
                 mt={1}
                 onValueChange={itemValue => setService(itemValue)}>
