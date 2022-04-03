@@ -6,16 +6,28 @@ import {
   SafeAreaView,
   TextInput,
   Alert,
+  TouchableOpacity,
 } from 'react-native';
 import React from 'react';
 import {fp} from '../image/index';
 import Button from '../components/Button';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import {useNavigation} from '@react-navigation/native';
 
-const Signup = () => {
+const ForgotPassword = () => {
   const [number, onChangeNumber] = React.useState(null);
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <ImageBackground source={fp} resizeMode="cover" style={styles.image}>
+        <View>
+          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+            <View style={styles.back}>
+              <Icon name="chevron-left" size={30} color="white" />
+              <Text style={styles.textback}>Back</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
         <Text style={styles.text}>THAT’S OKAY, WE GOT YOUR BACK</Text>
         <SafeAreaView style={styles.form}>
           <Text style={styles.fp}>
@@ -26,6 +38,7 @@ const Signup = () => {
             onChangeText={onChangeNumber}
             value={number}
             placeholder="Enter your email address"
+            placeholderTextColor="grey"
           />
         </SafeAreaView>
         <View style={styles.login}>
@@ -54,6 +67,18 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
   },
+  back: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    marginTop: 30,
+  },
+  textback: {
+    color: 'white',
+    marginLeft: 10,
+    fontSize: 18,
+  },
   text: {
     color: 'white',
     fontSize: 36,
@@ -66,7 +91,6 @@ const styles = StyleSheet.create({
   },
   input: {
     margin: 5,
-    borderWidth: 1,
     padding: 10,
     borderRadius: 10,
     backgroundColor: '#DFDEDE',
@@ -75,7 +99,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   form: {
-    marginTop: 180,
+    marginTop: 100,
   },
   login: {
     marginHorizontal: 8,
@@ -99,4 +123,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Signup;
+export default ForgotPassword;

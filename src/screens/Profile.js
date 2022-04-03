@@ -16,8 +16,10 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {useNavigation} from '@react-navigation/native';
 import Button from '../components/Button';
+import {useDispatch} from 'react-redux';
 
 const Profile = () => {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
   return (
     <NativeBaseProvider>
@@ -85,7 +87,7 @@ const Profile = () => {
             <Button
               style={styles.buttons}
               title="Logout"
-              onPress={() => navigation.navigate('Home Page')}
+              onPress={() => dispatch({type: 'AUTH_LOGOUT'})}
             />
           </TouchableOpacity>
         </ScrollView>

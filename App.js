@@ -8,15 +8,27 @@ import History from './src//screens/History';
 import Search from './src/screens/Search';
 import Profile from './src/screens/Profile';
 import Detail from './src/screens/Detail';
+import Reservation from './src/screens/Reservation';
+import Order from './src/screens/Order';
+import Payment from './src/screens/Payment';
+import SeeHistory from './src/screens/SeeHistory';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Login from './src/screens/Login';
+import Signup from './src/screens/Signup';
+import ForgotPassword from './src/screens/ForgotPassword';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Icons from 'react-native-vector-icons/FontAwesome5';
 import UpdateProfile from './src/screens/UpdateProfile';
+import {extendTheme, NativeBaseProvider, Stack} from 'native-base';
 
+import {Provider, useSelector} from 'react-redux';
+import {PersistGate} from 'redux-persist/integration/react';
+import stores from './src/redux/store';
+
+const StackAuth = createNativeStackNavigator();
 const MainStack = createNativeStackNavigator();
 const HomeStack = createNativeStackNavigator();
 const HistoryTabTop = createMaterialTopTabNavigator();
@@ -95,17 +107,95 @@ const MainNav = () => {
   );
 };
 
+const theme = extendTheme({
+  component: {
+    Input: {
+      baseStyle: {
+        _light: {
+          _focus: {
+            // border: 'red.500',
+          },
+        },
+      },
+      variants: {
+        coffee: {
+          py: 5,
+          borderWidth: 1,
+          borderRadius: 10,
+          backgroundColor: '#DFDEDE',
+          borderColor: 'transparent',
+          _focus: {
+            borderColor: '#FFCD61',
+          },
+        },
+      },
+      sizes: {
+        md: {
+          fontSize: 'sm',
+        },
+      },
+      defaultProps: {
+        size: 'md',
+      },
+    },
+  },
+});
+
+const Main = () => {
+  const auth = useSelector(state => state.auth);
+  return (
+    <NativeBaseProvider theme={theme}>
+      <NavigationContainer>
+        {auth.token === null && (
+          <StackAuth.Navigator>
+            <StackAuth.Screen
+              options={{
+                headerShown: false,
+              }}
+              name="Login"
+              component={Login}
+            />
+            <StackAuth.Screen
+              options={{
+                headerShown: false,
+              }}
+              name="Register"
+              component={Signup}
+            />
+            <StackAuth.Screen
+              options={{
+                headerShown: false,
+              }}
+              name="Forgot Password"
+              component={ForgotPassword}
+            />
+          </StackAuth.Navigator>
+        )}
+        {auth.token !== null && (
+          <MainStack.Navigator screenOptions={{headerShown: false}}>
+            <MainStack.Screen name="BottomTab" component={MainNav} />
+            <MainStack.Screen name="Update Profile" component={UpdateProfile} />
+            <MainStack.Screen name="Details" component={Detail} />
+            <MainStack.Screen name="Reservation" component={Reservation} />
+            <MainStack.Screen name="Order" component={Order} />
+            <MainStack.Screen name="Payment" component={Payment} />
+            <MainStack.Screen name="See History" component={SeeHistory} />
+          </MainStack.Navigator>
+        )}
+      </NavigationContainer>
+    </NativeBaseProvider>
+  );
+};
+
+const {store, persistor} = stores();
+
 const App = () => {
   return (
-    <NavigationContainer>
-      <MainStack.Navigator screenOptions={{headerShown: false}}>
-        {/* <Stack.Screen name="Home" component={Home} /> */}
-        {/* <Stack.Screen name="Login" component={Login} /> */}
-        <MainStack.Screen name="BottomTab" component={MainNav} />
-        <MainStack.Screen name="Update Profile" component={UpdateProfile} />
-        <MainStack.Screen name="Details" component={Detail} />
-      </MainStack.Navigator>
-    </NavigationContainer>
+    <Provider store={store}>
+      <PersistGate persistor={persistor}>
+        <Main />
+      </PersistGate>
+    </Provider>
   );
 };
 

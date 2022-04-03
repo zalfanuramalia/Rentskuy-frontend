@@ -6,40 +6,60 @@ import {
   SafeAreaView,
   TextInput,
   Alert,
+  TouchableOpacity,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {login} from '../image/index';
 import Button from '../components/Button';
 import IconFA from 'react-native-vector-icons/FontAwesome';
+import {useDispatch, useSelector} from 'react-redux';
+import onLogin from '../redux/actions/auth';
+import {useNavigation} from '@react-navigation/native';
+import allStyles from '../assets/allStyles';
 
 const Login = () => {
-  const [number, onChangeNumber] = React.useState(null);
+  const auth = useSelector(state => state.auth);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const dispatch = useDispatch();
+
+  const navigation = useNavigation();
+
+  const goLogin = () => {
+    dispatch(onLogin(username, password));
+  };
   return (
     <View style={styles.container}>
       <ImageBackground source={login} resizeMode="cover" style={styles.image}>
         <Text style={styles.text}>LET’S EXPLORE THE WORLDS</Text>
         <SafeAreaView style={styles.form}>
+          {auth.err && (
+            <View style={styles.err}>
+              <Text style={styles.texterr}>{auth.errMsg}</Text>
+            </View>
+          )}
           <TextInput
             style={styles.input}
-            onChangeText={onChangeNumber}
-            value={number}
+            onChangeText={setUsername}
+            value={username}
             placeholder="Username"
+            placeholderTextColor="grey"
           />
           <TextInput
             style={styles.input}
-            onChangeText={onChangeNumber}
-            value={number}
+            onChangeText={setPassword}
+            value={password}
+            secureTextEntry={true}
             placeholder="Password"
-            keyboardType="numeric"
+            placeholderTextColor="grey"
           />
-          <Text style={styles.forgot}>Forgot Password ?</Text>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Forgot Password')}>
+            <Text style={styles.forgot}>Forgot Password ?</Text>
+          </TouchableOpacity>
         </SafeAreaView>
         <View style={styles.login}>
-          <Button
-            style={styles.buttons}
-            title="Login"
-            onPress={() => Alert.alert('Login Success')}
-          />
+          <Button style={styles.buttons} title="Login" onPress={goLogin} />
         </View>
         <View style={styles.google}>
           <Button
@@ -48,7 +68,13 @@ const Login = () => {
             onPress={() => Alert.alert('Login Success')}
           />
         </View>
-        <Text style={styles.signup}>Dont have account? Sign up now</Text>
+        <View style={styles.signup}>
+          <Text style={styles.textlink}>Dont have account? </Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+            <Text style={styles.link}>Sign up </Text>
+          </TouchableOpacity>
+          <Text style={styles.textlink}>now</Text>
+        </View>
       </ImageBackground>
     </View>
   );
@@ -75,7 +101,6 @@ const styles = StyleSheet.create({
   },
   input: {
     margin: 12,
-    borderWidth: 1,
     padding: 10,
     borderRadius: 10,
     backgroundColor: '#DFDEDE',
@@ -83,7 +108,7 @@ const styles = StyleSheet.create({
     height: 50,
   },
   form: {
-    marginTop: 200,
+    marginTop: 100,
   },
   forgot: {
     color: 'white',
@@ -100,6 +125,7 @@ const styles = StyleSheet.create({
   },
   login: {
     marginHorizontal: 15,
+    marginVertical: 15,
   },
   google: {
     marginHorizontal: 15,
@@ -112,9 +138,35 @@ const styles = StyleSheet.create({
   },
   signup: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     marginHorizontal: 80,
-    marginTop: 20,
+    marginTop: 15,
+    alignItems: 'center',
+    color: 'white',
+  },
+  textlink: {
+    color: 'white',
+  },
+  link: {
+    color: 'white',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    borderBottomWidth: 0.5,
+    borderBottomColor: 'white',
+  },
+  err: {
+    backgroundColor: 'gray',
+    borderWidth: 1,
+    borderColor: 'black',
+    padding: 15,
+    marginHorizontal: 15,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  texterr: {
+    color: 'white',
   },
 });
 
