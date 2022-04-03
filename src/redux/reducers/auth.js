@@ -1,21 +1,63 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const initialState = {
+  userData: {},
   token: null,
   err: false,
   errMsg: '',
+  successMsg: null,
+  isLoading: false,
 };
 
 const auth = (state = initialState, action) => {
   switch (action.type) {
-    case 'AUTH_LOGIN': {
-      return {
-        ...state,
-        token: action.payload,
-      };
+    // case 'AUTH_LOGIN': {
+    //   return {
+    //     ...state,
+    //     token: action.payload,
+    //   };
+    // }
+    // case 'AUTH_LOGIN': {
+    //   const newState = {
+    //     successMsg: action.payload.message,
+    //     token: action.payload.token,
+    //   };
+    //   window.localStorage.setItem('token', newState.token);
+    //   return {
+    //     ...state,
+    //     ...newState,
+    //   };
+    // }
+    case 'AUTH_LOGIN_PENDING': {
+      state.isLoading = true;
+      state.err = false;
+      return {...state};
     }
+    case 'AUTH_LOGIN_FULFILLED': {
+      const {data} = action.payload;
+      console.log(data);
+      state.isLoading = false;
+      state.err = false;
+      state.token = data.results.token;
+      // AsyncStorage.setItem('token', state.token);
+      return {...state};
+    }
+    case 'AUTH_LOGIN_REJECTED': {
+      const {message} = action.payload.response.data;
+      state.isLoading = false;
+      state.err = true;
+      state.errMsg = message;
+      return {...state};
+    }
+    // case 'AUTH_LOGOUT': {
+    //   return {
+    //     ...initialState,
+    //   };
+    // }
     case 'AUTH_LOGOUT': {
-      return {
-        ...initialState,
-      };
+      state.token = null;
+      state.successMsg = '';
+      return {...state};
     }
     case 'AUTH_ERR': {
       return {
