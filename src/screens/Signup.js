@@ -29,7 +29,7 @@ const Signup = () => {
 
   useEffect(() => {
     dispatch({
-      type: 'CLEAR_ERR',
+      type: 'CLEAR_MESSAGE',
     });
   }, [dispatch]);
 
