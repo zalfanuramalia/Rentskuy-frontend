@@ -8,26 +8,62 @@ import {
   Alert,
   TouchableOpacity,
 } from 'react-native';
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {signup} from '../image/index';
 import Button from '../components/Button';
 import IconFA from 'react-native-vector-icons/FontAwesome';
 import {useNavigation} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
+import {userRegister} from '../redux/actions/register';
+import {Box} from 'native-base';
 
 const Signup = () => {
-  const [email, onChangeEmail] = React.useState(null);
-  const [number, onChangeNumber] = React.useState(null);
-  const [password, onChangePassword] = React.useState(null);
+  const [email, setEmail] = React.useState('');
+  const [name, setName] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const {register} = useSelector(state => state);
+  const [success, setSuccess] = useState(false);
 
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch({
+      type: 'CLEAR_ERR',
+    });
+  }, [dispatch]);
+
+  const goRegister = () => {
+    dispatch(userRegister(name, email, password));
+    // setSuccess(true);
+    // dispatch({
+    //   type: 'CLEAR_MESSAGE',
+    // });
+    // if (register.successMsg) {
+    //   navigation.navigate('Login');
+    // }
+  };
+
   return (
     <View style={styles.container}>
       <ImageBackground source={signup} resizeMode="cover" style={styles.image}>
         <Text style={styles.text}>LET’S HAVE SOME RIDE</Text>
         <SafeAreaView style={styles.form}>
+          {register.successMsg !== '' && (
+            <View style={styles.success}>
+              <Text style={styles.textsuccess}>{register.successMsg}</Text>
+            </View>
+          )}
           <TextInput
             style={styles.input}
-            onChangeText={onChangeEmail}
+            onChangeText={setName}
+            value={name}
+            placeholder="Name"
+            placeholderTextColor="grey"
+          />
+          <TextInput
+            style={styles.input}
+            onChangeText={setEmail}
             value={email}
             placeholder="Email"
             keyboardType="email-address"
@@ -35,27 +71,16 @@ const Signup = () => {
           />
           <TextInput
             style={styles.input}
-            onChangeText={onChangeNumber}
-            value={number}
-            keyboardType="numeric"
-            placeholder="Mobile Phone"
-            placeholderTextColor="grey"
-          />
-          <TextInput
-            style={styles.input}
-            onChangeText={onChangePassword}
+            onChangeText={setPassword}
             secureTextEntry={true}
             value={password}
             placeholder="Password"
             placeholderTextColor="grey"
           />
         </SafeAreaView>
+
         <View style={styles.login}>
-          <Button
-            style={styles.buttons}
-            title="Sign Up"
-            onPress={() => Alert.alert('Login Success')}
-          />
+          <Button style={styles.buttons} title="Sign Up" onPress={goRegister} />
         </View>
         <View style={styles.google}>
           <Button
@@ -82,6 +107,20 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
+  },
+  success: {
+    backgroundColor: 'gray',
+    borderWidth: 1,
+    borderColor: 'black',
+    padding: 15,
+    marginHorizontal: 15,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  textsuccess: {
+    color: 'white',
   },
   text: {
     color: 'white',
