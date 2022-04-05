@@ -5,7 +5,6 @@ import {
   StyleSheet,
   SafeAreaView,
   TextInput,
-  Alert,
   TouchableOpacity,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
@@ -14,11 +13,14 @@ import Button from '../components/Button';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
-import {forgotpass} from '../redux/actions/password';
+import {resetPass} from '../redux/actions/password';
 
-const ForgotPassword = () => {
+const ResetPassword = () => {
   const {password} = useSelector(state => state);
   const [email, setEmail] = useState('');
+  const [code, setCode] = useState('');
+  const [passwords, setPasswords] = useState('');
+  const [confirmPass, setConfirmPass] = useState('');
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
@@ -28,9 +30,8 @@ const ForgotPassword = () => {
     });
   }, [dispatch]);
 
-  const sendCode = () => {
-    dispatch(forgotpass(email));
-    navigation.navigate('Reset Password');
+  const newPasswordHandler = () => {
+    dispatch(resetPass(email, code, passwords, confirmPass));
   };
   return (
     <View style={styles.container}>
@@ -60,9 +61,34 @@ const ForgotPassword = () => {
             placeholder="Enter your email address"
             placeholderTextColor="grey"
           />
+          <TextInput
+            style={styles.input}
+            onChangeText={setCode}
+            value={code}
+            placeholder="Enter your code"
+            placeholderTextColor="grey"
+          />
+          <TextInput
+            style={styles.input}
+            onChangeText={setPasswords}
+            value={passwords}
+            placeholder="Enter your new password"
+            placeholderTextColor="grey"
+          />
+          <TextInput
+            style={styles.input}
+            onChangeText={setConfirmPass}
+            value={confirmPass}
+            placeholder="Enter your confirm new password"
+            placeholderTextColor="grey"
+          />
         </SafeAreaView>
         <View style={styles.login}>
-          <Button style={styles.buttons} title="Send Code" onPress={sendCode} />
+          <Button
+            style={styles.buttons}
+            title="Send Code"
+            onPress={newPasswordHandler}
+          />
         </View>
         {/* <View style={styles.google}>
           <Button
@@ -83,26 +109,12 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
   },
-  success: {
-    backgroundColor: 'gray',
-    borderWidth: 1,
-    borderColor: 'black',
-    padding: 15,
-    marginHorizontal: 15,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    borderRadius: 10,
-    marginBottom: 10,
-  },
-  textsuccess: {
-    color: 'white',
-  },
   back: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
     paddingHorizontal: 20,
-    marginTop: 30,
+    marginTop: 25,
   },
   textback: {
     color: 'white',
@@ -148,9 +160,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginHorizontal: 50,
-    marginTop: 20,
+    color: 'white',
+  },
+  success: {
+    backgroundColor: 'gray',
+    borderWidth: 1,
+    borderColor: 'black',
+    padding: 15,
+    marginHorizontal: 15,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  textsuccess: {
     color: 'white',
   },
 });
 
-export default ForgotPassword;
+export default ResetPassword;

@@ -21,10 +21,10 @@ const register = (state = registerState, action) => {
       return {...state};
     }
     case 'USER_REGISTER_REJECTED': {
-      const {data} = action.payload.data;
+      const {data} = action.payload;
       state.isLoading = false;
       state.err = true;
-      state.errMsg = data.err;
+      state.errMsg = data.message;
       return {...state};
     }
     case 'CLEAR_MESSAGE': {
