@@ -5,9 +5,10 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import Button from '../components/Button';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {
   Box,
@@ -16,19 +17,28 @@ import {
   VStack,
   FlatList,
   Divider,
-  ScrollView,
   Select,
+  Input,
 } from 'native-base';
 import allStyles from '../assets/allStyles';
 import Titles from '../components/Titles';
 import {DateTimePickerAndroid} from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Octicons from 'react-native-vector-icons/Octicons';
+import Icons from 'react-native-vector-icons/FontAwesome';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
+import getPopular from '../redux/actions/popular';
+import {getCar, getMotorbike, getBike} from '../redux/actions/category';
 
-const Home = () => {
+const Home = ({navigation}) => {
   const [date, setDate] = useState(new Date());
   let [service, setService] = React.useState('');
+  const dispatch = useDispatch();
+
+  const {category, popular} = useSelector(state => state);
+  const [search, setSearch] = useState('');
 
   const [dateChanged, setDateChanged] = useState(false);
   const onChange = (e, selectedDate) => {
@@ -44,120 +54,197 @@ const Home = () => {
     });
   };
 
-  const data = [
-    {id: 1, image: require('../../images/vehicles.png')},
-    {id: 2, image: require('../../images/vehicles.png')},
-    {id: 3, image: require('../../images/vehicles.png')},
-    {id: 4, image: require('../../images/vehicles.png')},
-  ];
+  useEffect(() => {
+    dispatch(getPopular());
+  }, [dispatch]);
 
-  const renderItem = ({item}) => {
-    return (
-      <TouchableOpacity style={styles.coverImg}>
-        <Image source={item.image} style={styles.listImg} />
-      </TouchableOpacity>
-    );
-  };
-  const navigation = useNavigation();
+  useEffect(() => {
+    dispatch(getCar());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(getMotorbike());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(getBike());
+  }, [dispatch]);
+
+  // const navigation = useNavigation();
   return (
     <NativeBaseProvider>
-      <View style={styles.main}>
-        <Image
-          source={require('../../images/bg-home.png')}
-          resizeMode="cover"
-        />
-        <View style={styles.search}>
-          <Box shadow="1" borderTopRadius={20} style={styles.box}>
-            <View style={styles.box1}>
-              <TextInput
-                name="location"
-                placeholder="Search Location"
-                placeholderTextColor="grey"
-                style={styles.input}
-              />
-              <Select
-                selectedValue={service}
-                minWidth="70"
-                accessibilityLabel="Choose Service"
-                placeholder="Car"
-                placeholderTextColor="white"
-                _selectedItem={{
-                  endIcon: <Octicons name="triangle-down" size={10} />,
-                  backgroundBlendMode: 'white',
-                }}
-                mt={1}
-                onValueChange={itemValue => setService(itemValue)}>
-                <Select.Item
-                  label="UX Research"
-                  value="ux"
-                  backgroundColor="grey"
+      <ScrollView horizontal={false}>
+        <Box style={styles.main}>
+          <Image
+            source={require('../../images/bg-home.png')}
+            resizeMode="cover"
+          />
+          <Box style={styles.search}>
+            <Input
+              variant="unstyled"
+              fontSize={20}
+              placeholder="Search vehicle"
+              placeholderTextColor="white"
+              value={search}
+              onChange={setSearch}
+              InputLeftElement={
+                <Icons
+                  name="search"
+                  color="white"
+                  size={16}
+                  style={styles.icon}
                 />
-                <Select.Item label="Web Development" value="web" />
-                <Select.Item label="Cross Platform Development" value="cross" />
-                <Select.Item label="UI Designing" value="ui" />
-                <Select.Item label="Backend Development" value="backend" />
-              </Select>
-            </View>
-            <View style={styles.box1}>
-              <TextInput
-                name="location"
-                placeholder="Search Date"
-                placeholderTextColor="grey"
-                style={styles.input}
-              />
-              <Select
-                selectedValue={service}
-                minWidth="70"
-                accessibilityLabel="Choose Service"
-                placeholder="1 Day"
-                placeholderTextColor="white"
-                _selectedItem={{
-                  endIcon: <Octicons name="triangle-down" size={10} />,
-                }}
-                mt={1}
-                onValueChange={itemValue => setService(itemValue)}>
-                <Select.Item
-                  label="UX Research"
-                  value="ux"
-                  backgroundColor="grey"
-                />
-                <Select.Item label="Web Development" value="web" />
-                <Select.Item label="Cross Platform Development" value="cross" />
-                <Select.Item label="UI Designing" value="ui" />
-                <Select.Item label="Backend Development" value="backend" />
-              </Select>
-            </View>
-            <TouchableOpacity style={styles.textinput}>
-              <Button
-                style={styles.buttons}
-                title="Search Vehicle"
-                onPress={() => navigation.navigate('Category')}
-              />
+              }
+              InputRightElement={
+                search !== '' ? (
+                  <TouchableOpacity onPress={() => setSearch('')}>
+                    <Icons
+                      name="remove"
+                      color="white"
+                      size={11}
+                      style={styles.texticon}
+                    />
+                  </TouchableOpacity>
+                ) : (
+                  <></>
+                )
+              }
+            />
+          </Box>
+        </Box>
+        <Box>
+          <Box style={styles.nav}>
+            <Text style={styles.recommend}>Recommended</Text>
+            <TouchableOpacity
+              style={styles.viewmore}
+              onPress={() => navigation.navigate('Search')}>
+              <Text style={styles.text}>View more</Text>
+              <Icon name="chevron-right" size={20} />
             </TouchableOpacity>
-            <View />
           </Box>
           <SafeAreaView>
-            <ScrollView>
-              <TouchableOpacity
-                style={styles.nav}
-                onPress={() => navigation.navigate('Details')}>
-                <Text style={styles.recommend}>Recommended</Text>
-                <View style={styles.viewmore}>
-                  <Text style={styles.text}>View more</Text>
-                  <Icon name="chevron-right" size={20} />
-                </View>
-              </TouchableOpacity>
-              <FlatList
-                data={data}
-                renderItem={renderItem}
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-                style={styles.img}
-              />
+            <ScrollView horizontal={true} style={styles.coverImg}>
+              {popular.popular.map(items => {
+                return (
+                  <TouchableOpacity
+                    key={items.id}
+                    style={styles.scroll}
+                    onPress={() =>
+                      navigation.navigate('Details', {id: items.id})
+                    }>
+                    <Box style={styles.listImg}>
+                      <Image
+                        source={{uri: `${items.image}`}}
+                        style={styles.img}
+                        resizeMode="contain"
+                      />
+                    </Box>
+                  </TouchableOpacity>
+                );
+              })}
             </ScrollView>
           </SafeAreaView>
-        </View>
-      </View>
+        </Box>
+        <Box>
+          <Box style={styles.nav}>
+            <Text style={styles.recommend}>Cars</Text>
+            <TouchableOpacity
+              style={styles.viewmore}
+              onPress={() => navigation.navigate('Search')}>
+              <Text style={styles.text}>View more</Text>
+              <Icon name="chevron-right" size={20} />
+            </TouchableOpacity>
+          </Box>
+          <SafeAreaView>
+            <ScrollView horizontal={true} style={styles.coverImg}>
+              {category.car.map(items => {
+                return (
+                  <TouchableOpacity
+                    key={items.id}
+                    style={styles.scroll}
+                    onPress={() =>
+                      navigation.navigate('Details', {id: items.id})
+                    }>
+                    <Box style={styles.listImg}>
+                      <Image
+                        source={{uri: `${items.image}`}}
+                        style={styles.img}
+                        resizeMode="contain"
+                      />
+                    </Box>
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+          </SafeAreaView>
+        </Box>
+        <Box>
+          <Box style={styles.nav}>
+            <Text style={styles.recommend}>Motorcycles</Text>
+            <TouchableOpacity
+              style={styles.viewmore}
+              onPress={() => navigation.navigate('Search')}>
+              <Text style={styles.text}>View more</Text>
+              <Icon name="chevron-right" size={20} />
+            </TouchableOpacity>
+          </Box>
+          <SafeAreaView>
+            <ScrollView horizontal={true} style={styles.coverImg}>
+              {category.motorbike.map(items => {
+                return (
+                  <TouchableOpacity
+                    key={items.id}
+                    style={styles.scroll}
+                    onPress={() =>
+                      navigation.navigate('Details', {id: items.id})
+                    }>
+                    <Box style={styles.listImg}>
+                      <Image
+                        source={{uri: `${items.image}`}}
+                        style={styles.img}
+                        resizeMode="contain"
+                      />
+                    </Box>
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+          </SafeAreaView>
+        </Box>
+        <Box>
+          <Box style={styles.nav}>
+            <Text style={styles.recommend}>Bikes</Text>
+            <TouchableOpacity
+              style={styles.viewmore}
+              onPress={() => navigation.navigate('Search')}>
+              <Text style={styles.text}>View more</Text>
+              <Icon name="chevron-right" size={20} />
+            </TouchableOpacity>
+          </Box>
+          <SafeAreaView>
+            <ScrollView horizontal={true} style={styles.coverImg}>
+              {category.bike.map(items => {
+                return (
+                  <TouchableOpacity
+                    key={items.id}
+                    style={styles.scroll}
+                    onPress={() =>
+                      navigation.navigate('Details', {id: items.id})
+                    }>
+                    <Box style={styles.listImg}>
+                      <Image
+                        source={{uri: `${items.image}`}}
+                        style={styles.img}
+                        resizeMode="contain"
+                      />
+                    </Box>
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+          </SafeAreaView>
+        </Box>
+      </ScrollView>
     </NativeBaseProvider>
   );
 };
@@ -166,12 +253,26 @@ const styles = StyleSheet.create({
   main: {
     position: 'relative',
   },
+  scroll: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   search: {
     position: 'absolute',
-    width: '100%',
-    height: '100%',
-    marginTop: 220,
-    background: 'transparent',
+    alignItems: 'center',
+    backgroundColor: '#393939',
+    opacity: 0.5,
+    paddingHorizontal: 10,
+    paddingTop: 10,
+    paddingBottom: 10,
+    borderRadius: 15,
+    marginHorizontal: 15,
+    marginVertical: 15,
+    marginTop: 50,
+    color: 'white',
+    width: '90%',
   },
   box: {
     backgroundColor: '#393939',
@@ -196,12 +297,11 @@ const styles = StyleSheet.create({
     marginVertical: 15,
   },
   nav: {
-    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginHorizontal: 20,
-    marginTop: 15,
+    marginTop: 20,
   },
   location: {
     flex: 1,
@@ -223,16 +323,16 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '600',
   },
-  coverImg: {
-    width: 300,
-    marginRight: 20,
-  },
+
   listImg: {
-    flex: 1,
-    width: '100%',
-    resizeMode: 'cover',
-    borderRadius: 10,
-    margin: 20,
+    borderRadius: 20,
+    backgroundColor: 'white',
+    marginHorizontal: 15,
+    marginVertical: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: 'wheat',
   },
   google: {
     marginHorizontal: 15,
@@ -244,6 +344,12 @@ const styles = StyleSheet.create({
     padding: 100,
   },
   home: {
+    flex: 1,
+    flexDirection: 'row',
+  },
+  img: {
+    width: 265,
+    height: 168,
     flex: 1,
     flexDirection: 'row',
   },
