@@ -1,7 +1,4 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
 const initialState = {
-  userData: {},
   token: null,
   err: false,
   errMsg: '',
@@ -39,7 +36,6 @@ const auth = (state = initialState, action) => {
       state.isLoading = false;
       state.err = false;
       state.token = data.results.token;
-      // AsyncStorage.setItem('token', state.token);
       return {...state};
     }
     case 'AUTH_LOGIN_REJECTED': {
