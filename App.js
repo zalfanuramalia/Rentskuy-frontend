@@ -1,5 +1,5 @@
 import {View, Text} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import Home from './src/screens/Home';
 import Filter from './src/screens/Filter';
 import Category from './src/screens/Category';
@@ -17,6 +17,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Login from './src/screens/Login';
 import Signup from './src/screens/Signup';
 import ForgotPassword from './src/screens/ForgotPassword';
+import ResetPassword from './src/screens/ResetPassword';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -24,9 +25,10 @@ import Icons from 'react-native-vector-icons/FontAwesome5';
 import UpdateProfile from './src/screens/UpdateProfile';
 import {extendTheme, NativeBaseProvider, Stack} from 'native-base';
 
-import {Provider, useSelector} from 'react-redux';
+import {Provider, useDispatch, useSelector} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import stores from './src/redux/store';
+import {getProfile} from './src/redux/actions/auth';
 
 const StackAuth = createNativeStackNavigator();
 const MainStack = createNativeStackNavigator();
@@ -140,6 +142,10 @@ const theme = extendTheme({
 
 const Main = () => {
   const auth = useSelector(state => state.auth);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getProfile(auth.token));
+  }, [auth.token, dispatch]);
   return (
     <NativeBaseProvider theme={theme}>
       <NavigationContainer>
@@ -166,6 +172,13 @@ const Main = () => {
               name="Forgot Password"
               component={ForgotPassword}
             />
+            <StackAuth.Screen
+              options={{
+                headerShown: false,
+              }}
+              name="Reset Password"
+              component={ResetPassword}
+            />
           </StackAuth.Navigator>
         )}
         {auth.token !== null && (
@@ -173,9 +186,45 @@ const Main = () => {
             <MainStack.Screen name="BottomTab" component={MainNav} />
             <MainStack.Screen name="Update Profile" component={UpdateProfile} />
             <MainStack.Screen name="Details" component={Detail} />
-            <MainStack.Screen name="Reservation" component={Reservation} />
-            <MainStack.Screen name="Order" component={Order} />
-            <MainStack.Screen name="Payment" component={Payment} />
+            <MainStack.Screen
+              options={{
+                animationEnabled: false,
+                transitionConfig: () => ({
+                  transitionSpec: {
+                    duration: 0,
+                    timing: 0,
+                  },
+                }),
+              }}
+              name="Reservation"
+              component={Reservation}
+            />
+            <MainStack.Screen
+              options={{
+                animationEnabled: false,
+                transitionConfig: () => ({
+                  transitionSpec: {
+                    duration: 0,
+                    timing: 0,
+                  },
+                }),
+              }}
+              name="Order"
+              component={Order}
+            />
+            <MainStack.Screen
+              options={{
+                animationEnabled: false,
+                transitionConfig: () => ({
+                  transitionSpec: {
+                    duration: 0,
+                    timing: 0,
+                  },
+                }),
+              }}
+              name="Payment"
+              component={Payment}
+            />
             <MainStack.Screen name="See History" component={SeeHistory} />
           </MainStack.Navigator>
         )}

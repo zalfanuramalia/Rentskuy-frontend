@@ -5,10 +5,10 @@ import {persistReducer} from 'redux-persist';
 import auth from './auth';
 import popular from './popular';
 import register from './register';
-import profile from './profile';
 import category from './category';
 import vehicle from './vehicle';
 import button from './button';
+import password from './password';
 
 const persistAuth = {
   key: 'auth',
@@ -40,8 +40,8 @@ const persistButton = {
   storage: AsyncStorage,
 };
 
-const persistProfile = {
-  key: 'profile',
+const persistPassword = {
+  key: 'password',
   storage: AsyncStorage,
 };
 
@@ -52,7 +52,7 @@ const rootReducers = combineReducers({
   category: persistReducer(persistCategory, category),
   vehicle: persistReducer(persistVehicle, vehicle),
   button: persistReducer(persistButton, button),
-  // profile: persistReducer(persistProfile, profile),
+  password: persistReducer(persistPassword, password),
 });
 
 export default rootReducers;
