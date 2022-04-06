@@ -1,5 +1,5 @@
 import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {people} from '../image/index';
 import {
   NativeBaseProvider,
@@ -18,12 +18,17 @@ import {useNavigation} from '@react-navigation/native';
 import Button from '../components/Button';
 import {useDispatch} from 'react-redux';
 import {useSelector} from 'react-redux';
+import {getProfile} from '../redux/actions/auth';
 
 const Profile = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
   const {auth} = useSelector(state => state);
+
+  // useEffect(() => {
+  //   dispatch(getProfile(auth.token));
+  // }, [auth.token]);
 
   const handlerLogout = () => {
     dispatch({
@@ -55,7 +60,7 @@ const Profile = () => {
                   style={styles.profileImg}
                 />
                 <Text color="white" fontSize="xl" style={styles.name}>
-                  Samantha Doe
+                  {auth.userData.name}
                 </Text>
                 {/* </Stack> */}
                 {/* <Pressable

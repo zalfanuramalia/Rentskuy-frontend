@@ -1,4 +1,5 @@
 const initialState = {
+  userData: null,
   token: null,
   err: false,
   errMsg: '',
@@ -8,23 +9,6 @@ const initialState = {
 
 const auth = (state = initialState, action) => {
   switch (action.type) {
-    // case 'AUTH_LOGIN': {
-    //   return {
-    //     ...state,
-    //     token: action.payload,
-    //   };
-    // }
-    // case 'AUTH_LOGIN': {
-    //   const newState = {
-    //     successMsg: action.payload.message,
-    //     token: action.payload.token,
-    //   };
-    //   window.localStorage.setItem('token', newState.token);
-    //   return {
-    //     ...state,
-    //     ...newState,
-    //   };
-    // }
     case 'AUTH_LOGIN_PENDING': {
       state.isLoading = true;
       state.err = false;
@@ -45,11 +29,26 @@ const auth = (state = initialState, action) => {
       state.errMsg = message;
       return {...state};
     }
-    // case 'AUTH_LOGOUT': {
-    //   return {
-    //     ...initialState,
-    //   };
-    // }
+    case 'GET_PROFILE_PENDING': {
+      state.isLoading = true;
+      state.err = false;
+      return {...state};
+    }
+    case 'GET_PROFILE_FULFILLED': {
+      const {data} = action.payload;
+      console.log(data);
+      state.userData = data.result;
+      state.pageInfo = data.info;
+      state.isLoading = false;
+      return {...state};
+    }
+    case 'GET_PROFILE_REJECTED': {
+      const {data} = action.payload.response;
+      state.isLoading = false;
+      state.errMsg = data.message;
+      state.err = true;
+      return {...state};
+    }
     case 'AUTH_LOGOUT': {
       state.token = null;
       state.successMsg = '';

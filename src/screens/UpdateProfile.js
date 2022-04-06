@@ -1,23 +1,54 @@
-import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
-import React from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  Alert,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {Button, NativeBaseProvider, Stack, Input, Radio} from 'native-base';
+import {
+  Button,
+  NativeBaseProvider,
+  Stack,
+  Input,
+  Radio,
+  Box,
+} from 'native-base';
+import {useDispatch, useSelector} from 'react-redux';
+import {getProfile} from '../redux/actions/auth';
 // import Button from '../components/Button';
 
 const UpdateProfile = () => {
   const navigation = useNavigation();
   const [value, setValue] = React.useState('one');
+  const {auth} = useSelector(state => state);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [mobileNumber, setMobileNumber] = useState('');
+  const [birthdate, setBirthdate] = useState('');
+  const [address, setAddress] = useState('');
+
+  useEffect(() => {
+    setName(auth.userData.name);
+    setEmail(auth.userData.email);
+    setMobileNumber(auth.userData.number);
+    setBirthdate(auth.userData.birthdate);
+    setAddress(auth.userData.address);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <NativeBaseProvider>
-      <View>
+      <Box style={styles.main}>
         <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
           <View flexDirection="row">
             <Icon name="chevron-left" size={20} />
             <Text style={styles.text}>Update Profile</Text>
           </View>
         </TouchableOpacity>
-        <View style={styles.image}>
+        <Box style={styles.image}>
           <Image
             source={require('../../images/people-1.png')}
             style={styles.profileImg}
@@ -26,49 +57,70 @@ const UpdateProfile = () => {
             <Button
               style={styles.button}
               height="10"
-              variant="outline"
-              colorScheme="success">
+              variant="solid"
+              _text={{
+                color: 'black',
+                fontSize: 'sm',
+              }}>
               Take a Picture
             </Button>
             <Button
               style={styles.button}
               height="10"
-              variant="outline"
-              colorScheme="success">
+              variant="solid"
+              _text={{
+                color: 'black',
+                fontSize: 'sm',
+              }}>
               Browse from gallery
             </Button>
           </View>
-        </View>
-        <View style={styles.main}>
+        </Box>
+        <Box style={styles.update}>
           <Stack style={styles.forms}>
             <Text>Name :</Text>
             <Input
               variant="underlined"
               placeholder="Your Name"
-              defaultValue="Samantha Doe"
+              // defaultValue={auth.userData.name}
+              value={name}
+              onChange={setName}
             />
           </Stack>
-        </View>
-        <Radio.Group
-          name="myRadioGroup"
-          value={value}
-          onChange={nextValue => {
-            setValue(nextValue);
-          }}>
-          <Radio value="one" my="1">
-            One
-          </Radio>
-          <Radio value="two" my="1">
-            Two
-          </Radio>
-        </Radio.Group>
-        <View>
+          <View style={styles.radio}>
+            <Box>
+              <Radio.Group
+                name="myRadioGroup"
+                value={value}
+                style={styles.gender}
+                onChange={nextValue => {
+                  setValue(nextValue);
+                }}>
+                <Radio value="female" my="1">
+                  Female
+                </Radio>
+              </Radio.Group>
+            </Box>
+            <Box>
+              <Radio.Group
+                name="myRadioGroup"
+                value={value}
+                onChange={nextValue => {
+                  setValue(nextValue);
+                }}>
+                <Radio value="male" my="1">
+                  Male
+                </Radio>
+              </Radio.Group>
+            </Box>
+          </View>
           <Stack style={styles.forms}>
             <Text>Email Address :</Text>
             <Input
               variant="underlined"
               placeholder="Your Email Address"
-              defaultValue="samanthadoe17@gmail.com"
+              value={email}
+              onChange={setEmail}
             />
           </Stack>
           <Stack style={styles.forms}>
@@ -76,7 +128,8 @@ const UpdateProfile = () => {
             <Input
               variant="underlined"
               placeholder="Your Phone Number"
-              defaultValue="+62 81348287878"
+              value={mobileNumber}
+              onChange={setMobileNumber}
             />
           </Stack>
           <Stack style={styles.forms}>
@@ -84,7 +137,8 @@ const UpdateProfile = () => {
             <Input
               variant="underlined"
               placeholder="Your Date of Birth"
-              defaultValue="December 21th 1998"
+              value={birthdate}
+              onChange={setBirthdate}
             />
           </Stack>
           <Stack style={styles.forms}>
@@ -92,32 +146,35 @@ const UpdateProfile = () => {
             <Input
               variant="underlined"
               placeholder="Your Delivery Address"
-              defaultValue="Iskandar Street Block A Number 102"
+              value={address}
+              onChange={setAddress}
             />
           </Stack>
-        </View>
-        <TouchableOpacity style={styles.textinput}>
-          <Button
-            onPress={() => navigation.navigate('Profile')}
-            size="lg"
-            colorScheme="black">
-            Save Change
-          </Button>
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity style={styles.textinput}>
+            <Button
+              style={styles.reservationBtn}
+              variant="solid"
+              _text={{
+                color: 'black',
+                fontSize: '2xl',
+              }}
+              onPress={() => navigation.navigate('Profile')}>
+              Save change
+            </Button>
+          </TouchableOpacity>
+        </Box>
+      </Box>
     </NativeBaseProvider>
   );
 };
 
 const styles = StyleSheet.create({
+  main: {
+    paddingHorizontal: 20,
+    marginTop: 20,
+  },
   update: {
-    flex: 1,
-    flexDirection: 'row',
-    // width: '100%',
-    // justifyContent: 'space-between',
-    // alignItems: 'center',
-    // marginTop: 20,
-    // paddingHorizontal: 10,
+    marginTop: 40,
   },
   text: {
     paddingHorizontal: 10,
@@ -139,12 +196,25 @@ const styles = StyleSheet.create({
   button: {
     width: '50%',
     color: 'black',
+    marginTop: 10,
+    backgroundColor: 'wheat',
+    marginLeft: 30,
   },
-  main: {
-    marginTop: 50,
+  radio: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  gender: {
+    marginRight: 10,
   },
   forms: {
     marginVertical: 10,
+  },
+  reservationBtn: {
+    borderRadius: 10,
+    marginTop: 5,
+    backgroundColor: 'wheat',
   },
 });
 

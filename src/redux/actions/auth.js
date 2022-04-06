@@ -14,3 +14,10 @@ const onLogin = (email, password) => {
 };
 
 export default onLogin;
+
+export const getProfile = token => {
+  return {
+    type: 'GET_PROFILE',
+    payload: http(token).get('/profile'),
+  };
+};
