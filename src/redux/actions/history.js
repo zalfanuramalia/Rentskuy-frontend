@@ -18,7 +18,7 @@ export const historyInput = (id_users, order, returned, token) => {
 
 export const getDetailHistory = (token, id) => {
   return {
-    type: 'GET_HISTORY_DETAIL',
+    type: 'GET_HISTORY',
     payload: http(token).get(`/history/${id}`),
   };
 };
