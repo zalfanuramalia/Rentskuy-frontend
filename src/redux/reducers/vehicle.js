@@ -1,5 +1,6 @@
 const detailState = {
   detailVehicle: [],
+  dataDetail: null,
   pageInfo: {},
   isLoading: false,
   err: false,
@@ -25,6 +26,10 @@ const detail = (state = detailState, action) => {
     case 'GET_DETAIL_REJECTED': {
       state.isLoading = false;
       state.err = true;
+      return {...state};
+    }
+    case 'DATA_DETAIL': {
+      state.dataDetail = action.payload;
       return {...state};
     }
     default: {

@@ -1,18 +1,54 @@
 import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {Box, NativeBaseProvider, Button} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Stepper from '../helpers/stepper';
 import {ReactNativeNumberFormat} from '../helpers/numberformat';
-import {colors, fontStyle, fontFamily, fontSize} from '../helpers/colorStyle';
+import {fontStyle, fontFamily, fontSize} from '../helpers/colorStyle';
+import {useSelector, useDispatch} from 'react-redux';
+import {historyInput} from '../redux/actions/history';
+import {getDetailVehicle, onReservation} from '../redux/actions/vehicle';
 
-const Order = () => {
+const Order = ({route}) => {
+  const {reservation, order, history, auth, vehicle} = useSelector(
+    state => state,
+  );
+  const qty = vehicle.dataDetail.qty;
+  const countDay = vehicle.dataDetail.countDay;
+  const date = vehicle.dataDetail.rentStartDate;
+  const returned = 'No';
   const navigation = useNavigation();
+  const [control, setControl] = useState(false);
+  const dispatch = useDispatch();
+  const {id: idVehicle} = route.params;
+
+  useEffect(() => {
+    console.log(vehicle);
+    dispatch(onReservation(vehicle.detailVehicle, qty, countDay, date));
+    if (history.historyData !== null && control) {
+      navigation.navigate('Payment', {
+        id: idVehicle,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [idVehicle, dispatch]);
+
+  const orderHandler = () => {
+    dispatch(
+      historyInput(auth.userData.id, String(idVehicle), returned, auth.token),
+    );
+    navigation.navigate('Payment', {
+      id: idVehicle,
+    });
+    // setControl(true);
+  };
+
   return (
     <NativeBaseProvider>
       <Box style={styles.main}>
-        <TouchableOpacity onPress={() => navigation.navigate('Reservation')}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Reservation', {id: idVehicle})}>
           <View style={styles.text}>
             <Icon name="chevron-left" size={20} style={styles.icon} />
             <Text style={styles.payment}>Payment</Text>
@@ -23,21 +59,28 @@ const Order = () => {
         </Box>
         <View style={styles.container}>
           <Image
-            source={require('../../images/payment.png')}
+            source={{uri: `${vehicle.dataDetail.image}`}}
             style={styles.vehicles}
-            resizeMode="cover"
+            resizeMode="contain"
+            width={338}
+            height={201}
           />
         </View>
         <Box style={styles.descWrapper}>
-          <Text style={styles.desc}>2 Vespa</Text>
-          <Text style={styles.desc}>Prepayment (no tax)</Text>
-          <Text style={styles.desc}>4 days</Text>
+          <Text style={styles.desc}>
+            {vehicle.dataDetail.qty} {vehicle.dataDetail.brand}
+          </Text>
+          <Text style={styles.desc}>
+            {reservation.reservationData.payment_type}
+          </Text>
+          <Text
+            style={styles.desc}>{`${vehicle.dataDetail.countDay} days`}</Text>
           <Text style={styles.desc}>Jan 18 2021 to Jan 22 2021</Text>
         </Box>
         <View style={styles.border} />
         <Box style={styles.price}>
           <Text style={styles.textPrice}>
-            <ReactNativeNumberFormat value={245000} />
+            <ReactNativeNumberFormat value={vehicle.dataDetail.totalPayment} />
           </Text>
           <Icon
             name="info-circle"
@@ -53,7 +96,7 @@ const Order = () => {
             color: 'black',
             fontSize: '2xl',
           }}
-          onPress={() => navigation.navigate('Payment')}>
+          onPress={orderHandler}>
           Get Payment Code
         </Button>
       </Box>
@@ -118,6 +161,10 @@ const styles = StyleSheet.create({
   detail: {
     opacity: 0.5,
   },
+  // vehicles: {
+  //   width: '100%',
+  //   height: '100%',
+  // },
 });
 
 export default Order;

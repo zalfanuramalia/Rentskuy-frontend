@@ -16,56 +16,74 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {Box, NativeBaseProvider, ScrollView, Stack, Button} from 'native-base';
 import {useState, useEffect} from 'react';
 import {colors, fontStyle, fontFamily, fontSize} from '../helpers/colorStyle';
-import DateTimePickerAndroid from '@react-native-community/datetimepicker';
+import {DateTimePickerAndroid} from '@react-native-community/datetimepicker';
 import {useNavigation} from '@react-navigation/native';
 import {ReactNativeNumberFormat} from '../helpers/numberformat';
-import {getDetailVehicle} from '../redux/actions/vehicle';
+import {getDetailVehicle, onReservation} from '../redux/actions/vehicle';
 import {useDispatch, useSelector} from 'react-redux';
 import {increment, decrement} from '../redux/actions/button';
+import Iconic from 'react-native-vector-icons/Fontisto';
+import Selects from '../components/Select';
 
 const Detail = ({route, navigation}) => {
   const [date, setDate] = useState(new Date());
+  const [day, setDay] = useState(0);
+  const [qty, setQty] = useState(0);
   const [dateChanged, setDateChanged] = useState(false);
   const [countDay, setCountDay] = useState('');
   const [favourite, setFavourite] = useState('');
   const dispatch = useDispatch();
+  const [control, setControl] = useState(false);
   const {id: idVehicle} = route.params;
 
   // const navigation = useNavigation();
 
   useEffect(() => {
     dispatch(getDetailVehicle(idVehicle));
-  }, [idVehicle]);
-
-  const onIncrement = e => {
-    e.preventDefault();
-    dispatch(increment());
-  };
-
-  const onDecrement = e => {
-    e.preventDefault();
-    dispatch(decrement());
-  };
+  }, [idVehicle, dispatch]);
 
   const {vehicle, button} = useSelector(state => state);
 
-  const dateChange = (event, selectedDate) => {
+  useEffect(() => {
+    if (vehicle.dataDetail !== null && control) {
+      navigation.navigate('Reservation', {id: idVehicle});
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [vehicle.dataDetail]);
+
+  const dateChanges = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setDateChanged(true);
     setDate(currentDate);
   };
 
-  const showMode = async () => {
+  const datePicker = async () => {
     DateTimePickerAndroid.open({
       value: date,
-      onChange: dateChange,
+      onChange: dateChanges,
       mode: 'date',
       is24Hour: true,
     });
   };
 
+  const onIncrement = () => {
+    setQty(qty + 1);
+  };
+
+  const onDecrement = () => {
+    if (qty > 0) {
+      setQty(qty - 1);
+    }
+  };
+
   const countDayChange = e => {
     setCountDay(e);
+  };
+
+  const goReservation = () => {
+    dispatch(onReservation(vehicle.detailVehicle, qty, countDay, date));
+    navigation.navigate('Reservation', {id: idVehicle});
+    // setControl(true);
   };
   return (
     <NativeBaseProvider>
@@ -173,7 +191,7 @@ const Detail = ({route, navigation}) => {
                     onPress={onDecrement}
                   />
                 </TouchableHighlight>
-                <Text style={styles.countNumber}>{button.value}</Text>
+                <Text style={styles.countNumber}>{qty}</Text>
                 <TouchableHighlight style={styles.counterBtn}>
                   <Icon
                     name="plus"
@@ -185,15 +203,30 @@ const Detail = ({route, navigation}) => {
             </Box>
 
             <Box style={styles.datePickerWrapper}>
-              <TouchableHighlight
+              <TouchableOpacity
                 style={styles.datePicker}
                 underlayColor="rgba(0,0,0,0.2)"
-                onPress={showMode}>
+                onPress={datePicker}>
                 <Text>
                   {dateChanged ? `${date.toLocaleDateString()}` : 'Select date'}
                 </Text>
-              </TouchableHighlight>
+
+                <Box>
+                  <Iconic name="date" />
+                </Box>
+              </TouchableOpacity>
               <Box style={styles.countDay}>
+                {/* <Selects
+                  width="100%"
+                  placeholder="1 Day"
+                  placeholderTextColor="black"
+                  variant="reservation"
+                  select={day}
+                  change={itemValue => setDay(itemValue)}>
+                  <Selects.Item label="1 day" value={1} />
+                  <Selects.Item label="2 days" value={2} />
+                  <Selects.Item label="3 days" value={3} />
+                </Selects> */}
                 <TextInput
                   style={styles.countInput}
                   onChangeText={countDayChange}
@@ -211,7 +244,7 @@ const Detail = ({route, navigation}) => {
                 color: 'black',
                 fontSize: '2xl',
               }}
-              onPress={() => navigation.navigate('Reservation')}>
+              onPress={goReservation}>
               Reservation
             </Button>
           </Stack>
@@ -335,6 +368,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     flex: 8,
     marginRight: 18,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   countDay: {
     backgroundColor: 'rgba(0,0,0,0.1)',
