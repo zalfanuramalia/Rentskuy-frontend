@@ -1,16 +1,41 @@
 import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
-import React from 'react';
 import {Box, NativeBaseProvider, Button} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {colors, fontStyle, fontFamily, fontSize} from '../helpers/colorStyle';
+import {useSelector, useDispatch} from 'react-redux';
+import React, {useState, useEffect} from 'react';
+import {getDetailHistory} from '../redux/actions/vehicle';
+import {fontStyle, fontFamily, fontSize} from '../helpers/colorStyle';
+import {ReactNativeNumberFormat} from '../helpers/numberformat';
 
-const SeeHistory = () => {
+const SeeHistory = ({route}) => {
+  const {reservation, history, auth, vehicle} = useSelector(state => state);
   const navigation = useNavigation();
+  const [control, setControl] = useState(false);
+  const dispatch = useDispatch();
+  // const {idHistory: history.detailHistory.id} = route.params;
+
+  // useEffect(() => {
+  //   dispatch(getDetailHistory(auth.token, history.historyData.usersId));
+  // }, [auth.token, history.historyData.usersId, dispatch]);
+
+  // useEffect(() => {
+  //   if (history.historyData !== null && control) {
+  //     navigation.navigate('History', {
+  //       idHistory: history.historyData.usersId,
+  //     });
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [history.historyData]);
   return (
     <NativeBaseProvider>
       <Box style={styles.main}>
-        <TouchableOpacity onPress={() => navigation.navigate('Order')}>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate('Payment', {
+              idHistory: history.historyData.usersId,
+            })
+          }>
           <View style={styles.text}>
             <Icon name="chevron-left" size={20} style={styles.icon} />
             <Text style={styles.payment}>See History</Text>
@@ -21,22 +46,36 @@ const SeeHistory = () => {
         </Box>
         <View style={styles.container}>
           <Image
-            source={require('../../images/payment.png')}
+            source={{uri: `${vehicle.dataDetail.image}`}}
             style={styles.vehicles}
-            resizeMode="cover"
+            resizeMode="contain"
+            width={338}
+            height={201}
           />
         </View>
         <Box style={styles.descWrapper}>
-          <Text style={styles.desc}>2 Vespa</Text>
-          <Text style={styles.desc}>Prepayment (no tax)</Text>
-          <Text style={styles.desc}>4 days</Text>
+          <Text style={styles.desc}>
+            {vehicle.dataDetail.qty} {vehicle.dataDetail.brand}
+          </Text>
+          <Text style={styles.desc}>
+            {reservation.reservationData.payment_type}
+          </Text>
+          <Text
+            style={styles.desc}>{`${vehicle.dataDetail.countDay} days`}</Text>
           <Text style={styles.desc}>Jan 18 2021 to Jan 22 2021</Text>
         </Box>
         <View style={styles.border} />
         <Box style={styles.descWrapper}>
-          <Text style={styles.desc}>ID : 9087627392624</Text>
-          <Text style={styles.desc}>Jessica Jane (jane@mail.com)</Text>
-          <Text style={styles.desc}>0890876789</Text>
+          <Text style={styles.desc}>
+            ID : {reservation.reservationData.idCard}
+          </Text>
+          <Text style={styles.desc}>
+            {reservation.reservationData.fullname} (
+            {reservation.reservationData.emailAddress})
+          </Text>
+          <Text style={styles.desc}>
+            {reservation.reservationData.mobilePhone}
+          </Text>
           <Text style={styles.desc}>Jakarta, Indonesia</Text>
         </Box>
         <Button
@@ -46,8 +85,15 @@ const SeeHistory = () => {
             color: 'black',
             fontSize: '2xl',
           }}
-          onPress={() => navigation.navigate('Histories')}>
-          Total : 245.000
+          onPress={() => navigation.navigate('History')}>
+          <Text style={styles.total}>
+            Total :{' '}
+            {
+              <ReactNativeNumberFormat
+                value={vehicle.dataDetail.totalPayment}
+              />
+            }
+          </Text>
         </Button>
       </Box>
     </NativeBaseProvider>
@@ -105,6 +151,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: 20,
     backgroundColor: 'wheat',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  total: {
+    fontSize: 24,
+    fontWeight: '800',
   },
 });
 

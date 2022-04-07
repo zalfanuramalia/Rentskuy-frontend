@@ -216,17 +216,6 @@ const Detail = ({route, navigation}) => {
                 </Box>
               </TouchableOpacity>
               <Box style={styles.countDay}>
-                {/* <Selects
-                  width="100%"
-                  placeholder="1 Day"
-                  placeholderTextColor="black"
-                  variant="reservation"
-                  select={day}
-                  change={itemValue => setDay(itemValue)}>
-                  <Selects.Item label="1 day" value={1} />
-                  <Selects.Item label="2 days" value={2} />
-                  <Selects.Item label="3 days" value={3} />
-                </Selects> */}
                 <TextInput
                   style={styles.countInput}
                   onChangeText={countDayChange}
