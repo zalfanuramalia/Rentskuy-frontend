@@ -1,10 +1,19 @@
 import {View, Text, StyleSheet, Image} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Box, ScrollView} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {useDispatch, useSelector} from 'react-redux';
+import {getAllHistoryUser} from '../redux/actions/history';
+import {ReactNativeNumberFormat} from '../helpers/numberformat';
 
-const History = () => {
+const History = ({navigation}) => {
+  const {history, auth} = useSelector(state => state);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAllHistoryUser(auth.token, auth.userData.id));
+  }, [auth.token, auth.userData.id, dispatch]);
   return (
     <SafeAreaView>
       <ScrollView>
@@ -23,105 +32,37 @@ const History = () => {
             </Text>
             <Text style={styles.title}>A week ago</Text>
           </Box>
-          <View style={styles.listVehicles}>
-            <View style={styles.left}>
-              <Image
-                source={require('../../images/vespa.png')}
-                alt="vespa"
-                resizeMode={'cover'}
-                width={150}
-                height={120}
-                borderRadius={30}
-                style={styles.image}
-              />
-            </View>
-            <View style={styles.right}>
-              <View>
-                <Text fontSize={'lg'} bold>
-                  Vespa Matic
-                </Text>
-                <Text>Jan 18 to 21 2021</Text>
-                <Text fontSize={'lg'} bold>
-                  Prepayment : Rp. 245.000
-                </Text>
-                <Text>Finished</Text>
-              </View>
-            </View>
-          </View>
-          <View style={styles.listVehicles}>
-            <View style={styles.left}>
-              <Image
-                source={require('../../images/vintage.png')}
-                alt="vespa"
-                resizeMode={'cover'}
-                width={150}
-                height={120}
-                borderRadius={30}
-                style={styles.image}
-              />
-            </View>
-            <View style={styles.right}>
-              <View>
-                <Text fontSize={'lg'} bold>
-                  Vintage Bike Honda
-                </Text>
-                <Text>Jan 18 to 21 2021</Text>
-                <Text fontSize={'lg'} bold>
-                  Prepayment : Rp. 245.000
-                </Text>
-                <Text>Finished</Text>
-              </View>
-            </View>
-          </View>
-          <View style={styles.listVehicles}>
-            <View style={styles.left}>
-              <Image
-                source={require('../../images/vintage.png')}
-                alt="vespa"
-                resizeMode={'cover'}
-                width={150}
-                height={120}
-                borderRadius={30}
-                style={styles.image}
-              />
-            </View>
-            <View style={styles.right}>
-              <View>
-                <Text fontSize={'lg'} bold>
-                  Vintage Bike Honda
-                </Text>
-                <Text>Jan 18 to 21 2021</Text>
-                <Text fontSize={'lg'} bold>
-                  Prepayment : Rp. 245.000
-                </Text>
-                <Text>Finished</Text>
-              </View>
-            </View>
-          </View>
-          <View style={styles.listVehicles}>
-            <View style={styles.left}>
-              <Image
-                source={require('../../images/vintage.png')}
-                alt="vespa"
-                resizeMode={'cover'}
-                width={150}
-                height={120}
-                borderRadius={30}
-                style={styles.image}
-              />
-            </View>
-            <View style={styles.right}>
-              <View>
-                <Text fontSize={'lg'} bold>
-                  Vintage Bike Honda
-                </Text>
-                <Text>Jan 18 to 21 2021</Text>
-                <Text fontSize={'lg'} bold>
-                  Prepayment : Rp. 245.000
-                </Text>
-                <Text>Finished</Text>
-              </View>
-            </View>
+          <View>
+            {history.listHistory.map(item => {
+              return (
+                <Box key={item.id} style={styles.listVehicles}>
+                  <Box style={styles.left}>
+                    <Image
+                      source={{uri: `${item.image}`}}
+                      resizeMode="contain"
+                      width={150}
+                      height={120}
+                      borderRadius={30}
+                    />
+                  </Box>
+                  <Box style={styles.right}>
+                    <Text fontSize={'lg'} bold>
+                      {item.vehicleName}
+                    </Text>
+                    <Text>Jan 18 to 21 2021</Text>
+                    <Text fontSize={'lg'} bold>
+                      Prepayment : Rp.245.000
+                      {/* {
+                        <ReactNativeNumberFormat
+                          value={vehicle.dataDetail.totalPayment}
+                        />
+                      } */}
+                    </Text>
+                    <Text>Finished</Text>
+                  </Box>
+                </Box>
+              );
+            })}
           </View>
         </Box>
       </ScrollView>

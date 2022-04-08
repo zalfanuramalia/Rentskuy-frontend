@@ -33,12 +33,7 @@ const Login = () => {
   }, [dispatch]);
 
   const goLogin = () => {
-    // e.preventDefault();
-    // var username = e.target.elements.username.value;
-    // var password = e.target.elements.password.value;
-    // const data = {email, password};
     dispatch(onLogin(email, password));
-    // dispatch(onLogin(username, password));
   };
   return (
     <View style={styles.container}>

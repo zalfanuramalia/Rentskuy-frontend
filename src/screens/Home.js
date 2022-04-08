@@ -40,20 +40,6 @@ const Home = ({navigation}) => {
   const {category, popular} = useSelector(state => state);
   const [search, setSearch] = useState('');
 
-  const [dateChanged, setDateChanged] = useState(false);
-  const onChange = (e, selectedDate) => {
-    setDate(selectedDate);
-    setDateChanged(true);
-  };
-  const handleShowDatePicker = e => {
-    e.preventDefault();
-    DateTimePickerAndroid.open({
-      value: date,
-      onChange,
-      mode: 'date',
-    });
-  };
-
   useEffect(() => {
     dispatch(getPopular());
   }, [dispatch]);
