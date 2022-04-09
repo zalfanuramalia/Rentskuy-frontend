@@ -55,9 +55,11 @@ const Profile = () => {
               <Box alignItems="center" style={styles.profile}>
                 {/* <Stack direction="row" space={3} alignItems="center"> */}
                 <Image
-                  source={require('../../images/people-1.png')}
+                  source={{uri: auth.userData.image}}
                   resizeMode="cover"
                   style={styles.profileImg}
+                  width={70}
+                  height={70}
                 />
                 <Text color="white" fontSize="xl" style={styles.name}>
                   {auth.userData.name}
@@ -123,11 +125,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   profileImg: {
-    borderRadius: 40,
+    borderRadius: 35,
   },
   profile: {
     flex: 1,
     flexDirection: 'row',
+    marginHorizontal: 10,
   },
   name: {
     marginHorizontal: 20,

@@ -23,7 +23,7 @@ export const getProfile = token => {
   };
 };
 
-export const updateProfile = async (
+export const updateProfile = (
   id,
   token,
   name,
@@ -34,11 +34,15 @@ export const updateProfile = async (
   birthdate,
   image,
 ) => {
-  try {
-    const {data} = await RNFetchBlob.fetch(
+  return {
+    type: 'UPDATE_PROFILE',
+    payload: RNFetchBlob.fetch(
       'PATCH',
       `http://192.168.1.4:5000/users/${id}`,
-      {Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data'},
+      {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data',
+      },
       [
         {
           name: 'image',
@@ -49,16 +53,10 @@ export const updateProfile = async (
         {name: 'name', data: name},
         {name: 'gender', data: gender},
         {name: 'email', data: email},
-        {name: 'addresss', data: address},
+        {name: 'address', data: address},
         {name: 'number', data: number},
         {name: 'birthdate', data: birthdate},
       ],
-    );
-    return {
-      type: 'UPDATE_PROFILE',
-      payload: data,
-    };
-  } catch (e) {
-    console.log(e);
-  }
+    ),
+  };
 };
