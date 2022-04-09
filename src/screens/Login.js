@@ -33,6 +33,9 @@ const Login = () => {
   }, [dispatch]);
 
   const goLogin = () => {
+    dispatch({
+      type: 'CLEAR_ERR',
+    });
     dispatch(onLogin(email, password));
   };
   return (

@@ -1,4 +1,5 @@
 const detailState = {
+  listVehicle: {},
   detailVehicle: [],
   dataDetail: null,
   pageInfo: {},
@@ -30,6 +31,24 @@ const detail = (state = detailState, action) => {
     }
     case 'DATA_DETAIL': {
       state.dataDetail = action.payload;
+      return {...state};
+    }
+    case 'ADD_VEHICLES_PENDING': {
+      state.isLoading = true;
+      state.err = false;
+      return {...state};
+    }
+    case 'ADD_VEHICLES_FULFILLED': {
+      const {data} = action.payload;
+      console.log(data);
+      state.listVehicle = data.results;
+      state.pageInfo = data.pageInfo;
+      state.isLoading = false;
+      return {...state};
+    }
+    case 'ADD_VEHICLES_REJECTED': {
+      state.isLoading = false;
+      state.err = true;
       return {...state};
     }
     default: {

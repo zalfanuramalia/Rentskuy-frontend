@@ -97,6 +97,13 @@ const Home = ({navigation}) => {
               }
             />
           </Box>
+          <Box style={styles.btn}>
+            <Button
+              style={`${styles.buttons} `}
+              title="Add new item"
+              onPress={() => navigation.navigate('Add New Item')}
+            />
+          </Box>
         </Box>
         <Box>
           <Box style={styles.nav}>
@@ -245,6 +252,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  buttons: {
+    borderRadius: 15,
+  },
+  btn: {
+    marginHorizontal: 10,
+    marginTop: 130,
+    position: 'absolute',
+    width: '90%',
+    alignItems: 'center',
+  },
   search: {
     position: 'absolute',
     alignItems: 'center',
@@ -324,10 +341,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
     marginTop: 10,
     justifyContent: 'center',
-  },
-  buttons: {
-    borderRadius: 5,
-    padding: 100,
   },
   home: {
     flex: 1,

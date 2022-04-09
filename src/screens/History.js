@@ -32,38 +32,38 @@ const History = ({navigation}) => {
             </Text>
             <Text style={styles.title}>A week ago</Text>
           </Box>
-          <View>
-            {history.listHistory.map(item => {
-              return (
-                <Box key={item.id} style={styles.listVehicles}>
-                  <Box style={styles.left}>
-                    <Image
-                      source={{uri: `${item.image}`}}
-                      resizeMode="contain"
-                      width={150}
-                      height={120}
-                      borderRadius={30}
-                    />
-                  </Box>
-                  <Box style={styles.right}>
-                    <Text fontSize={'lg'} bold>
-                      {item.vehicleName}
-                    </Text>
-                    <Text>Jan 18 to 21 2021</Text>
-                    <Text fontSize={'lg'} bold>
-                      Prepayment : Rp.245.000
-                      {/* {
+          <SafeAreaView>
+            <ScrollView>
+              {history.listHistory.map(item => {
+                return (
+                  <Box key={item.id} style={styles.listVehicles}>
+                    <Box>
+                      <Image
+                        source={{uri: `${item.image}`}}
+                        resizeMode="contain"
+                        style={styles.img}
+                      />
+                    </Box>
+                    <Box style={styles.right}>
+                      <Text fontSize={'lg'} bold>
+                        {item.vehicleName}
+                      </Text>
+                      <Text>Jan 18 to 21 2021</Text>
+                      <Text fontSize={'lg'} bold>
+                        Prepayment : Rp.245.000
+                        {/* {
                         <ReactNativeNumberFormat
                           value={vehicle.dataDetail.totalPayment}
                         />
                       } */}
-                    </Text>
-                    <Text>Finished</Text>
+                      </Text>
+                      <Text>Finished</Text>
+                    </Box>
                   </Box>
-                </Box>
-              );
-            })}
-          </View>
+                );
+              })}
+            </ScrollView>
+          </SafeAreaView>
         </Box>
       </ScrollView>
     </SafeAreaView>
@@ -82,10 +82,11 @@ const styles = StyleSheet.create({
   listVehicles: {
     flexDirection: 'row',
     marginVertical: 18,
+    alignItems: 'center',
   },
-  right: {
-    marginLeft: 35,
-    justifyContent: 'space-between',
+  img: {
+    width: 150,
+    height: 120,
   },
   title: {
     color: '#C4C4C4',
