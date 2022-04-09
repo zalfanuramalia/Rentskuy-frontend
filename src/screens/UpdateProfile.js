@@ -16,29 +16,89 @@ import {
   Input,
   Radio,
   Box,
+  Spinner,
 } from 'native-base';
 import {useDispatch, useSelector} from 'react-redux';
-import {getProfile} from '../redux/actions/auth';
+import {getProfile, updateProfile} from '../redux/actions/auth';
+import RNFetchBlob from 'rn-fetch-blob';
+import {launchImageLibrary} from 'react-native-image-picker';
 // import Button from '../components/Button';
 
-const UpdateProfile = () => {
+const UpdateProfile = ({route}) => {
   const navigation = useNavigation();
   const [value, setValue] = React.useState('one');
   const {auth} = useSelector(state => state);
   const [name, setName] = useState('');
+  const [gender, setGender] = useState('Women');
   const [email, setEmail] = useState('');
-  const [mobileNumber, setMobileNumber] = useState('');
+  const [number, setNumber] = useState('');
   const [birthdate, setBirthdate] = useState('');
   const [address, setAddress] = useState('');
+  const [image, setImage] = useState('');
+  const [control, setControl] = useState(false);
+  const [success, setSuccess] = useState(null);
+  const [error, setError] = useState('');
+  const [upload, setUpload] = useState(false);
+  const [picture, setPicture] = useState(require('../../images/people-1.png'));
+
+  const dispatch = useDispatch();
+  const {id: idProfile} = route.params;
 
   useEffect(() => {
-    setName(auth.userData.name);
-    setEmail(auth.userData.email);
-    setMobileNumber(auth.userData.number);
-    setBirthdate(auth.userData.birthdate);
-    setAddress(auth.userData.address);
+    dispatch(getProfile(auth.token));
+    console.log(image);
+    // dispatch({
+    //   type: 'CLEAR_UPDATE_MESSAGE',
+    // });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dispatch]);
+
+  const chooseFromLibrary = () => {
+    launchImageLibrary(
+      {mediaType: 'photo', storageOptions: {skipBackup: true}},
+      async response => {
+        // debugger;
+        if (response.assets.length > 0) {
+          setPicture({uri: response.assets[0].uri});
+          await RNFetchBlob.fetch(
+            'PATCH',
+            `http://192.168.1.4:5000/users/${auth.userData.id}`,
+            {'Content-Type': 'multipart/form-data'},
+            [
+              {
+                name: 'file',
+                filename: 'file.png',
+                type: 'image/png',
+                data: RNFetchBlob.wrap(),
+              },
+            ],
+          );
+        }
+      },
+    );
+  };
+
+  const addImage = async () => {
+    const photo = await launchImageLibrary({});
+    setImage(photo.assets[0]);
+  };
+
+  const updateProfileHandler = async () => {
+    // console.log(image);
+    await dispatch(
+      updateProfile(
+        auth.userData.id,
+        auth.token,
+        name,
+        gender,
+        email,
+        address,
+        number,
+        birthdate,
+        image,
+      ),
+    );
+  };
   return (
     <NativeBaseProvider>
       <Box style={styles.main}>
@@ -49,12 +109,22 @@ const UpdateProfile = () => {
           </View>
         </TouchableOpacity>
         <Box style={styles.image}>
-          <Image
-            source={require('../../images/people-1.png')}
-            style={styles.profileImg}
-          />
+          {image ? (
+            <Image
+              source={{uri: image.uri}}
+              style={styles.profileImg}
+              width={100}
+              height={100}
+            />
+          ) : (
+            <Image
+              source={{uri: auth.userData.image}}
+              style={styles.profileImg}
+            />
+          )}
           <View>
             <Button
+              onPress={() => navigation.navigate('Profile')}
               style={styles.button}
               height="10"
               variant="solid"
@@ -65,6 +135,7 @@ const UpdateProfile = () => {
               Take a Picture
             </Button>
             <Button
+              onPress={addImage}
               style={styles.button}
               height="10"
               variant="solid"
@@ -78,76 +149,80 @@ const UpdateProfile = () => {
         </Box>
         <Box style={styles.update}>
           <Stack style={styles.forms}>
-            <Text>Name :</Text>
+            <Text style={styles.label}>Name :</Text>
             <Input
               variant="underlined"
               placeholder="Your Name"
               // defaultValue={auth.userData.name}
-              value={name}
-              onChange={setName}
+              value={name ? name : auth.userData?.name}
+              onChangeText={setName}
             />
           </Stack>
           <View style={styles.radio}>
             <Box>
               <Radio.Group
                 name="myRadioGroup"
-                value={value}
+                value={gender}
                 style={styles.gender}
                 onChange={nextValue => {
-                  setValue(nextValue);
+                  setGender(nextValue);
                 }}>
-                <Radio value="female" my="1">
-                  Female
+                <Radio value="Women" my="1">
+                  Women
                 </Radio>
               </Radio.Group>
             </Box>
             <Box>
               <Radio.Group
                 name="myRadioGroup"
-                value={value}
+                value={gender}
                 onChange={nextValue => {
-                  setValue(nextValue);
+                  setGender(nextValue);
                 }}>
-                <Radio value="male" my="1">
-                  Male
+                <Radio value="Men" my="1">
+                  Men
                 </Radio>
               </Radio.Group>
             </Box>
           </View>
           <Stack style={styles.forms}>
-            <Text>Email Address :</Text>
+            <Text style={styles.label}>Email Address :</Text>
             <Input
               variant="underlined"
               placeholder="Your Email Address"
-              value={email}
-              onChange={setEmail}
+              // defaultValue={auth.userData.email}
+              value={email ? email : auth.userData.email}
+              onChangeText={setEmail}
             />
           </Stack>
           <Stack style={styles.forms}>
-            <Text>Phone Number :</Text>
+            <Text style={styles.label}>Phone Number :</Text>
             <Input
               variant="underlined"
               placeholder="Your Phone Number"
-              value={mobileNumber}
-              onChange={setMobileNumber}
+              // defaultValue={auth.userData.number}
+              value={number ? number : auth.userData.number}
+              onChangeText={setNumber}
             />
           </Stack>
           <Stack style={styles.forms}>
-            <Text>Date of Birth :</Text>
+            <Text style={styles.label}>Date of Birth :</Text>
             <Input
               variant="underlined"
               placeholder="Your Date of Birth"
-              value={birthdate}
-              onChange={setBirthdate}
+              // defaultValue={auth.userData.birthdate}
+              value={birthdate ? birthdate : auth.userData.birthdate}
+              onChangeText={setBirthdate}
             />
           </Stack>
           <Stack style={styles.forms}>
-            <Text>Delivery Address :</Text>
+            <Text style={styles.label}>Delivery Address :</Text>
             <Input
               variant="underlined"
               placeholder="Your Delivery Address"
-              value={address}
-              onChange={setAddress}
+              // defaultValue={auth.userData.address}
+              value={address ? address : auth.userData.address}
+              onChangeText={setAddress}
             />
           </Stack>
           <TouchableOpacity style={styles.textinput}>
@@ -158,7 +233,7 @@ const UpdateProfile = () => {
                 color: 'black',
                 fontSize: '2xl',
               }}
-              onPress={() => navigation.navigate('Profile')}>
+              onPress={updateProfileHandler}>
               Save change
             </Button>
           </TouchableOpacity>
@@ -215,6 +290,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: 5,
     backgroundColor: 'wheat',
+  },
+  label: {
+    marginHorizontal: 8,
+    fontSize: 18,
+    fontWeight: '700',
   },
 });
 

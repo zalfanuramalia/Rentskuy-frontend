@@ -3,6 +3,7 @@ import React, {useEffect} from 'react';
 import Home from './src/screens/Home';
 import Filter from './src/screens/Filter';
 import Category from './src/screens/Category';
+import AddNewItem from './src/screens/AddNewItem';
 import ChatList from './src/screens/ChatList';
 import History from './src//screens/History';
 import Search from './src/screens/Search';
@@ -24,6 +25,8 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Icons from 'react-native-vector-icons/FontAwesome5';
 import UpdateProfile from './src/screens/UpdateProfile';
 import {extendTheme, NativeBaseProvider, Stack} from 'native-base';
+import messaging from '@react-native-firebase/messaging';
+import PushNotification from 'react-native-push-notification';
 
 import {Provider, useDispatch, useSelector} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
@@ -43,6 +46,7 @@ const HomeStackNav = () => {
       <HomeStack.Screen name="Home" component={Home} />
       <HomeStack.Screen name="Filter" component={Filter} />
       <HomeStack.Screen name="Category" component={Category} />
+      <HomeStack.Screen name="Add New Item" component={AddNewItem} />
     </HomeStack.Navigator>
   );
 };
@@ -235,7 +239,19 @@ const Main = () => {
 
 const {store, persistor} = stores();
 
+PushNotification.createChannel({
+  channelId: 'rent-skuy',
+  channelName: 'Notification Rentskuy',
+});
+
 const App = () => {
+  const getToken = async () => {
+    const token = await messaging().getToken();
+    console.log(token);
+  };
+  useEffect(() => {
+    getToken();
+  }, []);
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor}>

@@ -95,7 +95,9 @@ const Profile = () => {
             <Icon name="chevron-right" size={20} />
           </View>
           <TouchableOpacity
-            onPressIn={() => navigation.navigate('Update Profile')}>
+            onPressIn={() =>
+              navigation.navigate('Update Profile', {id: auth.userData.id})
+            }>
             <View style={styles.viewmore}>
               <Text style={styles.text}>Update Profile</Text>
               <Icon name="chevron-right" size={20} />

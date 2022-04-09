@@ -22,3 +22,10 @@ export const getDetailHistory = (token, id) => {
     payload: http(token).get(`/history/${id}`),
   };
 };
+
+export const getAllHistoryUser = (token, id) => {
+  return {
+    type: 'ALL_HISTORY',
+    payload: http(token).get(`/history/users/${id}`),
+  };
+};

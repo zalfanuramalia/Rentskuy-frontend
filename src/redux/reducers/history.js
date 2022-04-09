@@ -1,5 +1,5 @@
 const dataHistory = {
-  detailHistory: [],
+  listHistory: [],
   historyData: null,
   isError: false,
   isLoading: false,
@@ -26,6 +26,25 @@ const history = (state = dataHistory, action) => {
       return dataHistory;
     }
     case 'GET_HISTORY_REJECTED': {
+      const {data} = action.payload.response;
+      state.isLoading = false;
+      state.isError = true;
+      state.errMessage = data.message;
+      return {...state};
+    }
+    case 'ALL_HISTORY_PENDING': {
+      state.isLoading = true;
+      return {...state};
+    }
+    case 'ALL_HISTORY_FULFILLED': {
+      const {data} = action.payload;
+      state.listHistory = data.results;
+      state.isLoading = false;
+      state.isError = false;
+      state.message = data.message;
+      return {...state};
+    }
+    case 'ALL_HISTORY_REJECTED': {
       const {data} = action.payload.response;
       state.isLoading = false;
       state.isError = true;

@@ -9,6 +9,7 @@ import {fontStyle, fontFamily, fontSize} from '../helpers/colorStyle';
 import {useSelector, useDispatch} from 'react-redux';
 import {historyInput} from '../redux/actions/history';
 import {getDetailVehicle, onReservation} from '../redux/actions/vehicle';
+import PushNotification from 'react-native-push-notification';
 
 const Order = ({route}) => {
   const {reservation, order, history, auth, vehicle} = useSelector(
@@ -22,6 +23,14 @@ const Order = ({route}) => {
   const [control, setControl] = useState(false);
   const dispatch = useDispatch();
   const {id: idVehicle} = route.params;
+
+  const localNotif = () => {
+    PushNotification.localNotification({
+      channelId: 'rent-skuy',
+      message: 'Your order has been received. Please make payment! ',
+      title: 'Order Information',
+    });
+  };
 
   useEffect(() => {
     console.log(vehicle);
@@ -38,6 +47,7 @@ const Order = ({route}) => {
     dispatch(
       historyInput(auth.userData.id, String(idVehicle), returned, auth.token),
     );
+    localNotif();
     navigation.navigate('Payment', {
       id: idVehicle,
     });
