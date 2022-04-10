@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   TextInput,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {fp} from '../image/index';
@@ -14,6 +15,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {resetPass} from '../redux/actions/password';
+import {Box} from 'native-base';
 
 const ResetPassword = () => {
   const {password} = useSelector(state => state);
@@ -32,72 +34,69 @@ const ResetPassword = () => {
 
   const newPasswordHandler = () => {
     dispatch(resetPass(email, code, passwords, confirmPass));
+    navigation.navigate('Login');
   };
   return (
     <View style={styles.container}>
-      <ImageBackground source={fp} resizeMode="cover" style={styles.image}>
-        <View>
-          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-            <View style={styles.back}>
-              <Icon name="chevron-left" size={30} color="white" />
-              <Text style={styles.textback}>Back</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-        <Text style={styles.text}>THAT’S OKAY, WE GOT YOUR BACK</Text>
-        <SafeAreaView style={styles.form}>
-          {password.successMsg !== '' && (
-            <View style={styles.success}>
-              <Text style={styles.textsuccess}>{password.successMsg}</Text>
-            </View>
-          )}
-          <Text style={styles.fp}>
-            Enter your email to get reset password code
-          </Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={setEmail}
-            value={email}
-            placeholder="Enter your email address"
-            placeholderTextColor="grey"
-          />
-          <TextInput
-            style={styles.input}
-            onChangeText={setCode}
-            value={code}
-            placeholder="Enter your code"
-            placeholderTextColor="grey"
-          />
-          <TextInput
-            style={styles.input}
-            onChangeText={setPasswords}
-            value={passwords}
-            placeholder="Enter your new password"
-            placeholderTextColor="grey"
-          />
-          <TextInput
-            style={styles.input}
-            onChangeText={setConfirmPass}
-            value={confirmPass}
-            placeholder="Enter your confirm new password"
-            placeholderTextColor="grey"
-          />
-        </SafeAreaView>
-        <View style={styles.login}>
-          <Button
-            style={styles.buttons}
-            title="Send Code"
-            onPress={newPasswordHandler}
-          />
-        </View>
-        {/* <View style={styles.google}>
-          <Button
-            style={`${styles.buttons} `}
-            title="Resend Code"
-            onPress={() => Alert.alert('Login Success')}
-          />
-        </View> */}
-      </ImageBackground>
+      <Box style={styles.main}>
+        <Image source={fp} resizeMode="cover" />
+        <Box style={styles.forms}>
+          <View>
+            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+              <View style={styles.back}>
+                <Icon name="chevron-left" size={30} color="white" />
+                <Text style={styles.textback}>Back</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <Text style={styles.text}>THAT’S OKAY, WE GOT YOUR BACK</Text>
+          <SafeAreaView style={styles.form}>
+            {password.successMsg !== '' && (
+              <View style={styles.success}>
+                <Text style={styles.textsuccess}>{password.successMsg}</Text>
+              </View>
+            )}
+            <Text style={styles.fp}>
+              Enter your email to get reset password code
+            </Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={setEmail}
+              value={email}
+              placeholder="Enter your email address"
+              placeholderTextColor="grey"
+            />
+            <TextInput
+              style={styles.input}
+              onChangeText={setCode}
+              value={code}
+              placeholder="Enter your code"
+              placeholderTextColor="grey"
+            />
+            <TextInput
+              style={styles.input}
+              onChangeText={setPasswords}
+              value={passwords}
+              placeholder="Enter your new password"
+              placeholderTextColor="grey"
+            />
+            <TextInput
+              style={styles.input}
+              onChangeText={setConfirmPass}
+              value={confirmPass}
+              placeholder="Enter your confirm new password"
+              placeholderTextColor="grey"
+            />
+          </SafeAreaView>
+          <View style={styles.login}>
+            <Button
+              style={styles.buttons}
+              title="Send Code"
+              onPress={newPasswordHandler}
+            />
+          </View>
+        </Box>
+      </Box>
     </View>
   );
 };
@@ -106,8 +105,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  image: {
-    flex: 1,
+  main: {
+    position: 'relative',
+  },
+  forms: {
+    position: 'absolute',
   },
   back: {
     flexDirection: 'row',
@@ -141,7 +143,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   form: {
-    marginTop: 100,
+    marginTop: 80,
   },
   login: {
     marginHorizontal: 8,

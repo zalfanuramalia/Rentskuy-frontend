@@ -53,31 +53,6 @@ const UpdateProfile = ({route}) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
-  const chooseFromLibrary = () => {
-    launchImageLibrary(
-      {mediaType: 'photo', storageOptions: {skipBackup: true}},
-      async response => {
-        // debugger;
-        if (response.assets.length > 0) {
-          setPicture({uri: response.assets[0].uri});
-          await RNFetchBlob.fetch(
-            'PATCH',
-            `http://192.168.1.4:5000/users/${auth.userData.id}`,
-            {'Content-Type': 'multipart/form-data'},
-            [
-              {
-                name: 'file',
-                filename: 'file.png',
-                type: 'image/png',
-                data: RNFetchBlob.wrap(),
-              },
-            ],
-          );
-        }
-      },
-    );
-  };
-
   const addImage = async () => {
     const photo = await launchImageLibrary({});
     setImage(photo.assets[0]);

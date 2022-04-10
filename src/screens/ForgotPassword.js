@@ -7,6 +7,7 @@ import {
   TextInput,
   Alert,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {fp} from '../image/index';
@@ -15,6 +16,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {forgotpass} from '../redux/actions/password';
+import {Box} from 'native-base';
 
 const ForgotPassword = () => {
   const {password} = useSelector(state => state);
@@ -34,44 +36,44 @@ const ForgotPassword = () => {
   };
   return (
     <View style={styles.container}>
-      <ImageBackground source={fp} resizeMode="cover" style={styles.image}>
-        <View>
-          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-            <View style={styles.back}>
-              <Icon name="chevron-left" size={30} color="white" />
-              <Text style={styles.textback}>Back</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-        <Text style={styles.text}>THAT’S OKAY, WE GOT YOUR BACK</Text>
-        <SafeAreaView style={styles.form}>
-          {password.successMsg !== '' && (
-            <View style={styles.success}>
-              <Text style={styles.textsuccess}>{password.successMsg}</Text>
-            </View>
-          )}
-          <Text style={styles.fp}>
-            Enter your email to get reset password code
-          </Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={setEmail}
-            value={email}
-            placeholder="Enter your email address"
-            placeholderTextColor="grey"
-          />
-        </SafeAreaView>
-        <View style={styles.login}>
-          <Button style={styles.buttons} title="Send Code" onPress={sendCode} />
-        </View>
-        {/* <View style={styles.google}>
-          <Button
-            style={`${styles.buttons} `}
-            title="Resend Code"
-            onPress={() => Alert.alert('Login Success')}
-          />
-        </View> */}
-      </ImageBackground>
+      <Box style={styles.main}>
+        <Image source={fp} resizeMode="cover" />
+        <Box style={styles.forms}>
+          <View>
+            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+              <View style={styles.back}>
+                <Icon name="chevron-left" size={30} color="white" />
+                <Text style={styles.textback}>Back</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <Text style={styles.text}>THAT’S OKAY, WE GOT YOUR BACK</Text>
+          <SafeAreaView style={styles.form}>
+            {password.successMsg !== '' && (
+              <View style={styles.success}>
+                <Text style={styles.textsuccess}>{password.successMsg}</Text>
+              </View>
+            )}
+            <Text style={styles.fp}>
+              Enter your email to get reset password code
+            </Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={setEmail}
+              value={email}
+              placeholder="Enter your email address"
+              placeholderTextColor="grey"
+            />
+          </SafeAreaView>
+          <View style={styles.login}>
+            <Button
+              style={styles.buttons}
+              title="Send Code"
+              onPress={sendCode}
+            />
+          </View>
+        </Box>
+      </Box>
     </View>
   );
 };
@@ -80,8 +82,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  image: {
-    flex: 1,
+  main: {
+    position: 'relative',
+  },
+  forms: {
+    position: 'absolute',
   },
   success: {
     backgroundColor: 'gray',
