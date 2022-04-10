@@ -18,7 +18,7 @@ import {useNavigation} from '@react-navigation/native';
 import Button from '../components/Button';
 import {useDispatch} from 'react-redux';
 import {useSelector} from 'react-redux';
-import {getProfile} from '../redux/actions/auth';
+import uploads from '../../images/upload.png';
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -58,11 +58,7 @@ const Profile = () => {
               <Box alignItems="center">
                 {/* <Stack direction="row" space={3} alignItems="center"> */}
                 <Image
-                  source={
-                    auth.userData?.image
-                      ? {uri: auth.userData.image}
-                      : require('../../images/upload.png')
-                  }
+                  source={{uri: `${auth.userData.image}`}}
                   resizeMode="cover"
                   style={styles.profileImg}
                   width={90}

@@ -16,9 +16,10 @@ import {colors, fontStyle, fontFamily, fontSize} from '../helpers/colorStyle';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {useDispatch, useSelector} from 'react-redux';
 import {addDataVehicles} from '../redux/actions/vehicle';
+import ModalPoup from '../components/Modalpoup';
 
 const AddNewItem = () => {
-  const {auth} = useSelector(state => state);
+  const {auth, vehicle} = useSelector(state => state);
   const navigation = useNavigation();
   const [brand, setBrand] = useState('');
   const [price, setPrice] = useState('');
@@ -29,6 +30,7 @@ const AddNewItem = () => {
   const [qty, setQty] = useState(0);
   const [image, setImage] = useState('');
   const dispatch = useDispatch();
+  const [visible, setVisible] = React.useState(false);
 
   const locations = ['Bandung', 'Jakarta', 'Yogyakarta', 'Depok', 'Bali'];
   const category = [
@@ -54,6 +56,7 @@ const AddNewItem = () => {
 
   const addVehiclesHandler = () => {
     // console.log(image);
+    setVisible(true);
     dispatch(
       addDataVehicles(
         auth.token,
@@ -67,6 +70,7 @@ const AddNewItem = () => {
       ),
     );
   };
+
   return (
     <NativeBaseProvider>
       <ScrollView style={styles.main}>
@@ -108,6 +112,11 @@ const AddNewItem = () => {
           </Box>
         </Box>
         <Stack style={styles.forms}>
+          {vehicle.err && (
+            <View style={styles.success}>
+              <Text style={styles.textsuccess}>{vehicle.errMsg}</Text>
+            </View>
+          )}
           <Text style={styles.label}>Name :</Text>
           <Input
             variant="underlined"
@@ -198,6 +207,28 @@ const AddNewItem = () => {
           </Box>
         </Box>
         <Box style={styles.btn}>
+          {vehicle.successMsg !== null && (
+            <ModalPoup visible={visible}>
+              <View alignItems="center">
+                <View style={styles.header}>
+                  <TouchableOpacity onPress={() => setVisible(false)}>
+                    <Image
+                      source={require('../../images/x.png')}
+                      style={styles.false}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View alignItems="center">
+                <Image
+                  source={require('../../images/success.png')}
+                  style={styles.success}
+                />
+              </View>
+
+              <Text style={styles.infosuccess}>Vehicle data created!</Text>
+            </ModalPoup>
+          )}
           <Button
             style={`${styles.buttons} `}
             title="Save Product"
@@ -292,6 +323,26 @@ const styles = StyleSheet.create({
   },
   btn: {
     marginVertical: 20,
+  },
+  false: {
+    width: 30,
+    height: 30,
+  },
+  header: {
+    width: '100%',
+    height: 40,
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+  },
+  success: {
+    height: 150,
+    width: 150,
+    marginVertical: 10,
+  },
+  infosuccess: {
+    marginVertical: 30,
+    fontSize: 20,
+    textAlign: 'center',
   },
 });
 

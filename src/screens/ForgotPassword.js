@@ -17,12 +17,15 @@ import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {forgotpass} from '../redux/actions/password';
 import {Box} from 'native-base';
+import ModalPoup from '../components/Modalpoup';
 
 const ForgotPassword = () => {
   const {password} = useSelector(state => state);
   const [email, setEmail] = useState('');
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const [visible, setVisible] = React.useState(false);
+  const [control, setControl] = useState(false);
 
   useEffect(() => {
     dispatch({
@@ -31,13 +34,18 @@ const ForgotPassword = () => {
   }, [dispatch]);
 
   const sendCode = () => {
+    setVisible(true);
     dispatch(forgotpass(email));
+  };
+
+  const closeHandler = () => {
+    setVisible(false);
     navigation.navigate('Reset Password');
   };
   return (
     <View style={styles.container}>
       <Box style={styles.main}>
-        <Image source={fp} resizeMode="cover" />
+        <Image source={fp} resizeMode="cover" style={styles.bg} />
         <Box style={styles.forms}>
           <View>
             <TouchableOpacity onPress={() => navigation.navigate('Login')}>
@@ -49,9 +57,9 @@ const ForgotPassword = () => {
           </View>
           <Text style={styles.text}>THAT’S OKAY, WE GOT YOUR BACK</Text>
           <SafeAreaView style={styles.form}>
-            {password.successMsg !== '' && (
+            {password.err && (
               <View style={styles.success}>
-                <Text style={styles.textsuccess}>{password.successMsg}</Text>
+                <Text style={styles.textsuccess}>{password.errMsg}</Text>
               </View>
             )}
             <Text style={styles.fp}>
@@ -64,14 +72,36 @@ const ForgotPassword = () => {
               placeholder="Enter your email address"
               placeholderTextColor="grey"
             />
+            <View style={styles.login}>
+              <Button
+                style={styles.buttons}
+                title="Send Code"
+                onPress={sendCode}
+              />
+            </View>
+            {password.successMsg !== '' && (
+              <ModalPoup visible={visible}>
+                <View alignItems="center">
+                  <View style={styles.header}>
+                    <TouchableOpacity onPress={closeHandler}>
+                      <Image
+                        source={require('../../images/x.png')}
+                        style={styles.false}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+                <View alignItems="center">
+                  <Image
+                    source={require('../../images/success.png')}
+                    style={styles.successes}
+                  />
+                </View>
+
+                <Text style={styles.infosuccess}>{password.successMsg}</Text>
+              </ModalPoup>
+            )}
           </SafeAreaView>
-          <View style={styles.login}>
-            <Button
-              style={styles.buttons}
-              title="Send Code"
-              onPress={sendCode}
-            />
-          </View>
         </Box>
       </Box>
     </View>
@@ -81,6 +111,10 @@ const ForgotPassword = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  bg: {
+    width: 502,
+    height: 881,
   },
   main: {
     position: 'relative',
@@ -135,9 +169,10 @@ const styles = StyleSheet.create({
   },
   form: {
     marginTop: 100,
+    marginLeft: 5,
   },
   login: {
-    marginHorizontal: 8,
+    marginHorizontal: 5,
     marginTop: 30,
   },
   google: {
@@ -155,6 +190,26 @@ const styles = StyleSheet.create({
     marginHorizontal: 50,
     marginTop: 20,
     color: 'white',
+  },
+  false: {
+    width: 30,
+    height: 30,
+  },
+  header: {
+    width: '100%',
+    height: 40,
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+  },
+  successes: {
+    height: 150,
+    width: 150,
+    marginVertical: 10,
+  },
+  infosuccess: {
+    marginVertical: 30,
+    fontSize: 20,
+    textAlign: 'center',
   },
 });
 

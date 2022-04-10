@@ -22,14 +22,15 @@ import {useDispatch, useSelector} from 'react-redux';
 import {getProfile, updateProfile} from '../redux/actions/auth';
 import RNFetchBlob from 'rn-fetch-blob';
 import {launchImageLibrary} from 'react-native-image-picker';
-// import Button from '../components/Button';
+import ModalPoup from '../components/Modalpoup';
+import uploads from '../../images/upload.png';
 
 const UpdateProfile = ({route}) => {
   const navigation = useNavigation();
   const [value, setValue] = React.useState('one');
   const {auth} = useSelector(state => state);
   const [name, setName] = useState('');
-  const [gender, setGender] = useState('Women');
+  const [gender, setGender] = useState(`${auth.userData.gender}`);
   const [email, setEmail] = useState('');
   const [number, setNumber] = useState('');
   const [birthdate, setBirthdate] = useState('');
@@ -40,6 +41,7 @@ const UpdateProfile = ({route}) => {
   const [error, setError] = useState('');
   const [upload, setUpload] = useState(false);
   const [picture, setPicture] = useState(require('../../images/people-1.png'));
+  const [visible, setVisible] = React.useState(false);
 
   const dispatch = useDispatch();
   const {id: idProfile} = route.params;
@@ -73,6 +75,11 @@ const UpdateProfile = ({route}) => {
         image,
       ),
     );
+    if (!auth.err) {
+      setVisible(true);
+      setControl(false);
+    }
+    setControl(true);
   };
   return (
     <NativeBaseProvider>
@@ -201,6 +208,30 @@ const UpdateProfile = ({route}) => {
             />
           </Stack>
           <TouchableOpacity style={styles.textinput}>
+            {auth.successMsg !== null && (
+              <ModalPoup visible={visible}>
+                <View alignItems="center">
+                  <View style={styles.header}>
+                    <TouchableOpacity onPress={() => setVisible(false)}>
+                      <Image
+                        source={require('../../images/x.png')}
+                        style={styles.false}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+                <View alignItems="center">
+                  <Image
+                    source={require('../../images/success.png')}
+                    style={styles.success}
+                  />
+                </View>
+
+                <Text style={styles.infosuccess}>
+                  Your Profile Has Been Updated!
+                </Text>
+              </ModalPoup>
+            )}
             <Button
               style={styles.reservationBtn}
               variant="solid"
@@ -270,6 +301,26 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
     fontSize: 18,
     fontWeight: '700',
+  },
+  false: {
+    width: 30,
+    height: 30,
+  },
+  header: {
+    width: '100%',
+    height: 40,
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+  },
+  success: {
+    height: 150,
+    width: 150,
+    marginVertical: 10,
+  },
+  infosuccess: {
+    marginVertical: 30,
+    fontSize: 20,
+    textAlign: 'center',
   },
 });
 

@@ -20,13 +20,13 @@ const Payment = ({route}) => {
   );
 
   useEffect(() => {
-    dispatch(getDetailHistory(auth.token, history.historyData.usersId));
-  }, [auth.token, history.historyData.usersId, dispatch]);
+    dispatch(getDetailHistory(auth.token, history.historyData.id_users));
+  }, [auth.token, history.historyData.id_users, dispatch]);
 
   useEffect(() => {
     if (history.historyData !== null && control) {
       navigation.navigate('SeeHistory', {
-        idHistory: history.historyData.usersId,
+        idHistory: history.historyData.id_users,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
