@@ -26,9 +26,12 @@ const Profile = () => {
 
   const {auth} = useSelector(state => state);
 
-  // useEffect(() => {
-  //   dispatch(getProfile(auth.token));
-  // }, [auth.token]);
+  useEffect(() => {
+    dispatch({
+      type: 'CLEAR_ERR',
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handlerLogout = () => {
     dispatch({
@@ -48,37 +51,36 @@ const Profile = () => {
             py="4"
             px="3"
             rounded="md"
-            height={100}
+            height={250}
             maxWidth="100%"
             style={styles.texts}>
             <HStack>
-              <Box alignItems="center" style={styles.profile}>
+              <Box alignItems="center">
                 {/* <Stack direction="row" space={3} alignItems="center"> */}
                 <Image
-                  source={{uri: auth.userData.image}}
+                  source={
+                    auth.userData?.image
+                      ? {uri: auth.userData.image}
+                      : require('../../images/upload.png')
+                  }
                   resizeMode="cover"
                   style={styles.profileImg}
-                  width={70}
-                  height={70}
+                  width={90}
+                  height={90}
                 />
-                <Text color="white" fontSize="xl" style={styles.name}>
-                  {auth.userData.name}
-                </Text>
-                {/* </Stack> */}
-                {/* <Pressable
-                  rounded="xs"
-                  bg="primary.400"
-                  alignSelf="flex-start"
-                  py="1"
-                  px="3">
-                  <Text
-                    textTransform="uppercase"
-                    fontSize="sm"
-                    fontWeight="bold"
-                    color="white">
-                    Remind me
+                <Box style={styles.info}>
+                  <Text color="white" fontSize="xl" style={styles.name}>
+                    {auth.userData?.name}
                   </Text>
-                </Pressable> */}
+                  <Text color="white" fontSize="xl" style={styles.name}>
+                    {auth.userData?.email}
+                  </Text>
+                  <Text color="white" fontSize="xl" style={styles.name}>
+                    {auth.userData?.number
+                      ? auth.userData?.number
+                      : 'Set your phone number'}
+                  </Text>
+                </Box>
               </Box>
             </HStack>
           </Box>
@@ -125,7 +127,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   profileImg: {
-    borderRadius: 35,
+    borderRadius: 45,
   },
   profile: {
     flex: 1,
@@ -135,6 +137,11 @@ const styles = StyleSheet.create({
   name: {
     marginHorizontal: 20,
     fontSize: 18,
+    marginTop: 5,
+  },
+  info: {
+    alignItems: 'center',
+    marginTop: 20,
   },
   viewmore: {
     flex: 1,
@@ -156,39 +163,8 @@ const styles = StyleSheet.create({
   textinput: {
     marginHorizontal: 15,
     marginVertical: 15,
-    marginTop: 350,
+    marginTop: 190,
   },
 });
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//   },
-//   mainCardView: {
-//     height: 90,
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     borderRadius: 15,
-//     shadowOffset: {width: 0, height: 0},
-//     shadowOpacity: 1,
-//     shadowRadius: 8,
-//     elevation: 8,
-//     flexDirection: 'row',
-//     paddingLeft: 16,
-//     paddingRight: 14,
-//     marginTop: 6,
-//     marginBottom: 6,
-//     marginLeft: 16,
-//     marginRight: 16,
-//   },
-//   subCardView: {
-//     height: 50,
-//     width: 50,
-//     borderRadius: 25,
-//     borderWidth: 1,
-//     borderStyle: 'solid',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-// });
 
 export default Profile;

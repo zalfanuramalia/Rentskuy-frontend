@@ -23,7 +23,7 @@ import {getDetailVehicle, onReservation} from '../redux/actions/vehicle';
 import {useDispatch, useSelector} from 'react-redux';
 import {increment, decrement} from '../redux/actions/button';
 import Iconic from 'react-native-vector-icons/Fontisto';
-import Selects from '../components/Select';
+import {Picker} from '@react-native-picker/picker';
 
 const Detail = ({route, navigation}) => {
   const [date, setDate] = useState(new Date());
@@ -32,6 +32,7 @@ const Detail = ({route, navigation}) => {
   const [dateChanged, setDateChanged] = useState(false);
   const [countDay, setCountDay] = useState('');
   const [favourite, setFavourite] = useState('');
+  const [idCategory, setIdCategory] = useState('');
   const dispatch = useDispatch();
   const [control, setControl] = useState(false);
   const {id: idVehicle} = route.params;
@@ -42,7 +43,7 @@ const Detail = ({route, navigation}) => {
     dispatch(getDetailVehicle(idVehicle));
   }, [idVehicle, dispatch]);
 
-  const {vehicle, button} = useSelector(state => state);
+  const {vehicle, auth} = useSelector(state => state);
 
   useEffect(() => {
     if (vehicle.dataDetail !== null && control) {
@@ -87,158 +88,314 @@ const Detail = ({route, navigation}) => {
   };
   return (
     <NativeBaseProvider>
-      <SafeAreaView>
-        <ScrollView>
-          <View style={styles.wrapper}>
-            <Image
-              source={{uri: vehicle.detailVehicle.image} || order}
-              resizeMode="contain"
-              style={styles.img}
-            />
-            <Box style={styles.item}>
-              <View style={styles.back}>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate('Home Page')}>
-                  <Icon name="chevron-left" size={30} color="white" />
-                </TouchableOpacity>
-              </View>
-              <View style={styles.rating}>
-                <LinearGradient
-                  start={{x: 0, y: 0}}
-                  end={{x: 1, y: 0}}
-                  colors={['#F8A170', '#FFCD61']}
-                  style={styles.linearGradient}>
-                  <Text style={styles.rate}>
-                    4.5 <Icon name="star" color="white" />
-                  </Text>
-                </LinearGradient>
-                <TouchableOpacity onPress={() => setFavourite(!favourite)}>
-                  {favourite ? (
-                    <Icon
-                      name="heart"
-                      size={20}
-                      color="red"
-                      backgroundColor="red"
-                      style={styles.hearticon}
-                    />
-                  ) : (
-                    <Icon
-                      name="heart"
-                      size={20}
-                      color="white"
-                      style={styles.hearticon}
-                    />
-                  )}
-                </TouchableOpacity>
-              </View>
-            </Box>
-          </View>
-          <Stack style={styles.content}>
-            <Box style={[styles.detailHeadWrapper]}>
-              <Box>
-                <Text style={styles.textPrice}>
-                  {vehicle.detailVehicle.brand}
-                </Text>
-                <Text style={styles.textPrice}>
-                  <ReactNativeNumberFormat
-                    value={vehicle.detailVehicle.price}
-                    suffix={'/day'}
-                  />
-                </Text>
+      {auth.userData?.role === 'Customer' ? (
+        <SafeAreaView>
+          <ScrollView>
+            <View style={styles.wrapper}>
+              <Image
+                source={{uri: vehicle.detailVehicle.image} || order}
+                resizeMode="contain"
+                style={styles.img}
+              />
+              <Box style={styles.item}>
+                <View style={styles.back}>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate('Home Page')}>
+                    <Icon name="chevron-left" size={30} color="white" />
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.rating}>
+                  <LinearGradient
+                    start={{x: 0, y: 0}}
+                    end={{x: 1, y: 0}}
+                    colors={['#F8A170', '#FFCD61']}
+                    style={styles.linearGradient}>
+                    <Text style={styles.rate}>
+                      4.5 <Icon name="star" color="white" />
+                    </Text>
+                  </LinearGradient>
+                  <TouchableOpacity onPress={() => setFavourite(!favourite)}>
+                    {favourite ? (
+                      <Icon
+                        name="heart"
+                        size={20}
+                        color="red"
+                        backgroundColor="red"
+                        style={styles.hearticon}
+                      />
+                    ) : (
+                      <Icon
+                        name="heart"
+                        size={20}
+                        color="white"
+                        style={styles.hearticon}
+                      />
+                    )}
+                  </TouchableOpacity>
+                </View>
               </Box>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('ChatList')}
-                style={styles.heartIconWrapper}>
-                <Icons
-                  name="chatbubble-outline"
-                  style={styles.chat}
-                  size={30}
-                  color="#FFCD61"
-                />
-              </TouchableOpacity>
-            </Box>
-            <Box style={styles.descWrapper}>
-              <Text style={styles.desc}>
-                Max for {vehicle.detailVehicle.qty} person
-              </Text>
-              <Text style={styles.desc}>
-                {vehicle.detailVehicle.can_prepayment}
-              </Text>
-              <Text style={[styles.desc, styles.availableText]}>
-                {vehicle.detailVehicle.isAvailable}
-              </Text>
-            </Box>
-
-            <Box style={styles.infoWrapper}>
-              <Icon name="map-marker-alt" style={styles.mapWrapper} />
-              <Text style={styles.location}>
-                {vehicle.detailVehicle.location}
-              </Text>
-            </Box>
-
-            <Box style={styles.infoWrapper}>
-              <Icon name="walking" style={styles.mapWrapper} />
-              <Text style={styles.location}>3.2 miles from your location</Text>
-            </Box>
-
-            <Box style={styles.counterSection}>
-              <Text style={styles.counterText}>Select vehicles</Text>
-              <Box style={styles.counterWrapper}>
-                <TouchableHighlight style={styles.counterBtn}>
-                  <Icon
-                    name="minus"
-                    style={styles.counterIcon}
-                    onPress={onDecrement}
-                  />
-                </TouchableHighlight>
-                <Text style={styles.countNumber}>{qty}</Text>
-                <TouchableHighlight style={styles.counterBtn}>
-                  <Icon
-                    name="plus"
-                    style={styles.counterIcon}
-                    onPress={onIncrement}
-                  />
-                </TouchableHighlight>
-              </Box>
-            </Box>
-
-            <Box style={styles.datePickerWrapper}>
-              <TouchableOpacity
-                style={styles.datePicker}
-                underlayColor="rgba(0,0,0,0.2)"
-                onPress={datePicker}>
-                <Text>
-                  {dateChanged ? `${date.toLocaleDateString()}` : 'Select date'}
-                </Text>
-
+            </View>
+            <Stack style={styles.content}>
+              <Box style={[styles.detailHeadWrapper]}>
                 <Box>
-                  <Iconic name="date" />
+                  <Text style={styles.textPrice}>
+                    {vehicle.detailVehicle.brand}
+                  </Text>
+                  <Text style={styles.textPrice}>
+                    <ReactNativeNumberFormat
+                      value={vehicle.detailVehicle.price}
+                      suffix={'/day'}
+                    />
+                  </Text>
                 </Box>
-              </TouchableOpacity>
-              <Box style={styles.countDay}>
-                <TextInput
-                  style={styles.countInput}
-                  onChangeText={countDayChange}
-                  keyboardType="number-pad"
-                  value={countDay}
-                  placeholder="1"
-                />
-                <Text style={styles.placeholder}>Day</Text>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('ChatList')}
+                  style={styles.heartIconWrapper}>
+                  <Icons
+                    name="chatbubble-outline"
+                    style={styles.chat}
+                    size={30}
+                    color="#FFCD61"
+                  />
+                </TouchableOpacity>
               </Box>
-            </Box>
-            <Button
-              style={styles.reservationBtn}
-              variant="solid"
-              _text={{
-                color: 'black',
-                fontSize: '2xl',
-              }}
-              onPress={goReservation}>
-              Reservation
-            </Button>
-          </Stack>
-        </ScrollView>
-      </SafeAreaView>
+              <Box style={styles.descWrapper}>
+                <Text style={styles.desc}>
+                  Max for {vehicle.detailVehicle.qty} person
+                </Text>
+                <Text style={styles.desc}>
+                  {vehicle.detailVehicle.can_prepayment}
+                </Text>
+                <Text style={[styles.desc, styles.availableText]}>
+                  {vehicle.detailVehicle.isAvailable}
+                </Text>
+              </Box>
+
+              <Box style={styles.infoWrapper}>
+                <Icon name="map-marker-alt" style={styles.mapWrapper} />
+                <Text style={styles.location}>
+                  {vehicle.detailVehicle.location}
+                </Text>
+              </Box>
+
+              <Box style={styles.infoWrapper}>
+                <Icon name="walking" style={styles.mapWrapper} />
+                <Text style={styles.location}>
+                  3.2 miles from your location
+                </Text>
+              </Box>
+
+              <Box style={styles.counterSection}>
+                <Text style={styles.counterText}>Select vehicles</Text>
+                <Box style={styles.counterWrapper}>
+                  <TouchableHighlight style={styles.counterBtn}>
+                    <Icon
+                      name="minus"
+                      style={styles.counterIcon}
+                      onPress={onDecrement}
+                    />
+                  </TouchableHighlight>
+                  <Text style={styles.countNumber}>{qty}</Text>
+                  <TouchableHighlight style={styles.counterBtn}>
+                    <Icon
+                      name="plus"
+                      style={styles.counterIcon}
+                      onPress={onIncrement}
+                    />
+                  </TouchableHighlight>
+                </Box>
+              </Box>
+
+              <Box style={styles.datePickerWrapper}>
+                <TouchableOpacity
+                  style={styles.datePicker}
+                  underlayColor="rgba(0,0,0,0.2)"
+                  onPress={datePicker}>
+                  <Text>
+                    {dateChanged
+                      ? `${date.toLocaleDateString()}`
+                      : 'Select date'}
+                  </Text>
+
+                  <Box>
+                    <Iconic name="date" />
+                  </Box>
+                </TouchableOpacity>
+                <Box style={styles.countDay}>
+                  <TextInput
+                    style={styles.countInput}
+                    onChangeText={countDayChange}
+                    keyboardType="number-pad"
+                    value={countDay}
+                    placeholder="1"
+                  />
+                  <Text style={styles.placeholder}>Day</Text>
+                </Box>
+              </Box>
+              <Button
+                style={styles.reservationBtn}
+                variant="solid"
+                _text={{
+                  color: 'black',
+                  fontSize: '2xl',
+                }}
+                onPress={goReservation}>
+                Reservation
+              </Button>
+            </Stack>
+          </ScrollView>
+        </SafeAreaView>
+      ) : (
+        <SafeAreaView>
+          <ScrollView>
+            <View style={styles.wrapper}>
+              <Image
+                source={{uri: vehicle.detailVehicle.image} || order}
+                resizeMode="contain"
+                style={styles.img}
+              />
+              <Box style={styles.item}>
+                <View style={styles.back}>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate('Home Page')}>
+                    <Icon name="chevron-left" size={30} color="white" />
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.rating}>
+                  <LinearGradient
+                    start={{x: 0, y: 0}}
+                    end={{x: 1, y: 0}}
+                    colors={['#F8A170', '#FFCD61']}
+                    style={styles.linearGradient}>
+                    <Text style={styles.rate}>
+                      4.5 <Icon name="star" color="white" />
+                    </Text>
+                  </LinearGradient>
+                  <TouchableOpacity onPress={() => setFavourite(!favourite)}>
+                    {favourite ? (
+                      <Icon
+                        name="heart"
+                        size={20}
+                        color="red"
+                        backgroundColor="red"
+                        style={styles.hearticon}
+                      />
+                    ) : (
+                      <Icon
+                        name="heart"
+                        size={20}
+                        color="white"
+                        style={styles.hearticon}
+                      />
+                    )}
+                  </TouchableOpacity>
+                </View>
+              </Box>
+            </View>
+            <Stack style={styles.content}>
+              <Box style={[styles.detailHeadWrapper]}>
+                <Box>
+                  <Text style={styles.textPrice}>
+                    {vehicle.detailVehicle.brand}
+                  </Text>
+                  <Text style={styles.textPrice}>
+                    <ReactNativeNumberFormat
+                      value={vehicle.detailVehicle.price}
+                      suffix={'/day'}
+                    />
+                  </Text>
+                </Box>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('ChatList')}
+                  style={styles.heartIconWrapper}>
+                  <Icons
+                    name="chatbubble-outline"
+                    style={styles.chat}
+                    size={30}
+                    color="#FFCD61"
+                  />
+                </TouchableOpacity>
+              </Box>
+              <Box style={styles.descWrapper}>
+                <Text style={styles.desc}>
+                  Max for {vehicle.detailVehicle.qty} person
+                </Text>
+                <Text style={styles.desc}>
+                  {vehicle.detailVehicle.can_prepayment}
+                </Text>
+                <Text style={[styles.desc, styles.availableText]}>
+                  {vehicle.detailVehicle.isAvailable}
+                </Text>
+              </Box>
+
+              <Box style={styles.infoWrapper}>
+                <Icon name="map-marker-alt" style={styles.mapWrapper} />
+                <Text style={styles.location}>
+                  {vehicle.detailVehicle.location}
+                </Text>
+              </Box>
+
+              <Box style={styles.infoWrapper}>
+                <Icon name="walking" style={styles.mapWrapper} />
+                <Text style={styles.location}>
+                  3.2 miles from your location
+                </Text>
+              </Box>
+
+              <Box style={styles.counterSection}>
+                <Text style={styles.counterText}>Update Stock</Text>
+                <Box style={styles.counterWrapper}>
+                  <TouchableHighlight style={styles.counterBtn}>
+                    <Icon
+                      name="minus"
+                      style={styles.counterIcon}
+                      onPress={onDecrement}
+                    />
+                  </TouchableHighlight>
+                  <Text style={styles.countNumber}>{qty}</Text>
+                  <TouchableHighlight style={styles.counterBtn}>
+                    <Icon
+                      name="plus"
+                      style={styles.counterIcon}
+                      onPress={onIncrement}
+                    />
+                  </TouchableHighlight>
+                </Box>
+              </Box>
+
+              <Box style={styles.pickerWrap}>
+                <Picker
+                  style={styles.picker}
+                  placeholder="update stock status"
+                  selectedValue={idCategory}
+                  onValueChange={(itemValue, itemIndex) =>
+                    setIdCategory(itemValue)
+                  }>
+                  {/* <Picker.item label="Select Location" color="gray" value={null} /> */}
+                  <Picker.Item
+                    label=""
+                    value="update stock status"
+                    color="gray"
+                  />
+                  <Picker.Item label="1" value={1} color="gray" />
+                  <Picker.Item label="2" value={2} color="gray" />
+                  <Picker.Item label="3" value={3} color="gray" />
+                </Picker>
+              </Box>
+              <Button
+                style={styles.reservationBtn}
+                variant="solid"
+                onPress={() => navigation.navigate('Home')}
+                _text={{
+                  color: 'black',
+                  fontSize: '2xl',
+                }}>
+                Update Item
+              </Button>
+            </Stack>
+          </ScrollView>
+        </SafeAreaView>
+      )}
     </NativeBaseProvider>
   );
 };
@@ -344,6 +501,12 @@ const styles = StyleSheet.create({
   },
   location: {
     paddingHorizontal: 10,
+  },
+  pickerWrap: {
+    marginTop: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(99, 110, 114,0.7)',
+    borderRadius: 10,
   },
   datePickerWrapper: {
     marginTop: 24,
