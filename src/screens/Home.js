@@ -61,6 +61,7 @@ const Home = ({navigation}) => {
             <Image
               source={require('../../images/bg-home.png')}
               resizeMode="cover"
+              style={styles.bg}
             />
             <Box style={styles.search}>
               <Input
@@ -511,6 +512,10 @@ const styles = StyleSheet.create({
     width: 265,
     height: 168,
     flexDirection: 'row',
+  },
+  bg: {
+    width: 393,
+    height: 280,
   },
 });
 

@@ -13,6 +13,7 @@ import Stepper from '../helpers/stepper';
 import {useSelector, useDispatch} from 'react-redux';
 import {dataReservation} from '../redux/actions/reservation';
 import Selects from '../components/Select';
+import {Picker} from '@react-native-picker/picker';
 
 const Reservation = ({route}) => {
   const {reservation} = useSelector(state => state);
@@ -106,24 +107,25 @@ const Reservation = ({route}) => {
           />
         </View>
         <View style={styles.inputSelect}>
-          <Selects
-            width="100%"
+          <Picker
+            style={styles.picker}
             placeholder="Payment Type"
-            placeholderTextColor="grey"
-            variant="reservation"
-            select={paymentType}
-            change={itemValue => setPaymentType(itemValue)}>
-            <Selects.Item label="Prepayment" value={'Prepayment'} />
-            <Selects.Item label="Payment at end" value={'Payment at end'} />
-            <Selects.Item label="Partial payment" value={'Partial payment'} />
-          </Selects>
-          {/* <TextInput
-            placeholder="Payment type"
-            placeholderTextColor="grey"
-            style={styles.input}
-            value={paymentType}
-            onChangeText={setPaymentType}
-          /> */}
+            selectedValue={paymentType}
+            onValueChange={(itemValue, itemIndex) => setPaymentType(itemValue)}>
+            {/* <Picker.item label="Select Location" color="gray" value={null} /> */}
+            <Picker.Item label="Payment Type" color="gray" />
+            <Picker.Item label="Prepayment" value={'Prepayment'} color="gray" />
+            <Picker.Item
+              label="Payment at end"
+              value={'Payment at end'}
+              color="gray"
+            />
+            <Picker.Item
+              label="Partial payment"
+              value={'Partial payment'}
+              color="gray"
+            />
+          </Picker>
         </View>
         <Button
           style={styles.reservationBtn}
@@ -190,6 +192,17 @@ const styles = StyleSheet.create({
   },
   inputSelect: {
     marginTop: 20,
+  },
+  picker: {
+    backgroundColor: '#DFDEDE',
+    borderRadius: 10,
+    opacity: 0.5,
+  },
+  pickerWrap: {
+    marginTop: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(99, 110, 114,0.7)',
+    borderRadius: 10,
   },
 });
 

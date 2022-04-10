@@ -49,7 +49,7 @@ const Signup = () => {
   return (
     <View style={styles.container}>
       <Box style={styles.main}>
-        <Image source={signup} resizeMode="cover" />
+        <Image source={signup} resizeMode="cover" style={styles.bg} />
         <Box style={styles.forms}>
           <Text style={styles.text}>LET’S HAVE SOME RIDE</Text>
           <SafeAreaView style={styles.form}>
@@ -130,6 +130,10 @@ const Signup = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  bg: {
+    width: 502,
+    height: 881,
   },
   main: {
     position: 'relative',

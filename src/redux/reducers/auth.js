@@ -59,7 +59,7 @@ const auth = (state = initialState, action) => {
       const {data} = action.payload;
       console.log(data);
       state.profile = data.result;
-      state.message = data.message;
+      state.successMsg = data.message;
       state.isLoading = false;
       return {...state};
     }

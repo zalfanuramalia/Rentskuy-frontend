@@ -16,6 +16,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {resetPass} from '../redux/actions/password';
 import {Box} from 'native-base';
+import ModalPoup from '../components/Modalpoup';
 
 const ResetPassword = () => {
   const {password} = useSelector(state => state);
@@ -25,6 +26,7 @@ const ResetPassword = () => {
   const [confirmPass, setConfirmPass] = useState('');
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const [visible, setVisible] = React.useState(false);
 
   useEffect(() => {
     dispatch({
@@ -33,13 +35,18 @@ const ResetPassword = () => {
   }, [dispatch]);
 
   const newPasswordHandler = () => {
+    setVisible(true);
     dispatch(resetPass(email, code, passwords, confirmPass));
+  };
+
+  const closeHandler = () => {
+    setVisible(false);
     navigation.navigate('Login');
   };
   return (
     <View style={styles.container}>
       <Box style={styles.main}>
-        <Image source={fp} resizeMode="cover" />
+        <Image source={fp} resizeMode="cover" style={styles.bg} />
         <Box style={styles.forms}>
           <View>
             <TouchableOpacity onPress={() => navigation.navigate('Login')}>
@@ -51,9 +58,9 @@ const ResetPassword = () => {
           </View>
           <Text style={styles.text}>THAT’S OKAY, WE GOT YOUR BACK</Text>
           <SafeAreaView style={styles.form}>
-            {password.successMsg !== '' && (
+            {password.err && (
               <View style={styles.success}>
-                <Text style={styles.textsuccess}>{password.successMsg}</Text>
+                <Text style={styles.textsuccess}>{password.errMsg}</Text>
               </View>
             )}
             <Text style={styles.fp}>
@@ -77,6 +84,7 @@ const ResetPassword = () => {
               style={styles.input}
               onChangeText={setPasswords}
               value={passwords}
+              secureTextEntry={true}
               placeholder="Enter your new password"
               placeholderTextColor="grey"
             />
@@ -84,17 +92,40 @@ const ResetPassword = () => {
               style={styles.input}
               onChangeText={setConfirmPass}
               value={confirmPass}
+              secureTextEntry={true}
               placeholder="Enter your confirm new password"
               placeholderTextColor="grey"
             />
+            <View style={styles.login}>
+              <Button
+                style={styles.buttons}
+                title="Send Code"
+                onPress={newPasswordHandler}
+              />
+            </View>
+            {!password.err && (
+              <ModalPoup visible={visible}>
+                <View alignItems="center">
+                  <View style={styles.header}>
+                    <TouchableOpacity onPress={closeHandler}>
+                      <Image
+                        source={require('../../images/x.png')}
+                        style={styles.false}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+                <View alignItems="center">
+                  <Image
+                    source={require('../../images/success.png')}
+                    style={styles.successes}
+                  />
+                </View>
+
+                <Text style={styles.infosuccess}>{password.msgSuccess}</Text>
+              </ModalPoup>
+            )}
           </SafeAreaView>
-          <View style={styles.login}>
-            <Button
-              style={styles.buttons}
-              title="Send Code"
-              onPress={newPasswordHandler}
-            />
-          </View>
         </Box>
       </Box>
     </View>
@@ -144,9 +175,10 @@ const styles = StyleSheet.create({
   },
   form: {
     marginTop: 80,
+    marginLeft: 5,
   },
   login: {
-    marginHorizontal: 8,
+    marginHorizontal: 5,
     marginTop: 30,
   },
   google: {
@@ -177,6 +209,30 @@ const styles = StyleSheet.create({
   },
   textsuccess: {
     color: 'white',
+  },
+  bg: {
+    width: 502,
+    height: 881,
+  },
+  false: {
+    width: 30,
+    height: 30,
+  },
+  header: {
+    width: '100%',
+    height: 40,
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+  },
+  successes: {
+    height: 150,
+    width: 150,
+    marginVertical: 10,
+  },
+  infosuccess: {
+    marginVertical: 30,
+    fontSize: 20,
+    textAlign: 'center',
   },
 });
 

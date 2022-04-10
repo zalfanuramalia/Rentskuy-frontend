@@ -26,10 +26,10 @@ const ModalPoup = ({visible, children}) => {
         useNativeDriver: true,
       }).start();
     } else {
-      setTimeout(() => setShowModal(false), 2000);
+      setTimeout(() => setShowModal(false), 1000);
       Animated.timing(scaleValue, {
         toValue: 0,
-        duration: 3000,
+        duration: 300,
         useNativeDriver: true,
       }).start();
     }

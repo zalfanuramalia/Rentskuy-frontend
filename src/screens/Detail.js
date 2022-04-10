@@ -372,14 +372,17 @@ const Detail = ({route, navigation}) => {
                     setIdCategory(itemValue)
                   }>
                   {/* <Picker.item label="Select Location" color="gray" value={null} /> */}
+                  <Picker.Item label="Update stock status" color="gray" />
                   <Picker.Item
-                    label=""
-                    value="update stock status"
+                    label="Available"
+                    value={'Available'}
                     color="gray"
                   />
-                  <Picker.Item label="1" value={1} color="gray" />
-                  <Picker.Item label="2" value={2} color="gray" />
-                  <Picker.Item label="3" value={3} color="gray" />
+                  <Picker.Item
+                    label="Not Available"
+                    value={'Not Available'}
+                    color="gray"
+                  />
                 </Picker>
               </Box>
               <Button
@@ -414,8 +417,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   img: {
-    width: 360,
-    height: 300,
+    width: 400,
+    height: 255,
     backgroundColor: 'wheat',
     flexDirection: 'row',
     justifyContent: 'center',

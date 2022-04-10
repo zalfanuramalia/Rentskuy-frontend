@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import React, {useEffect} from 'react';
 import {Box, ScrollView} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -19,12 +19,14 @@ const History = ({navigation}) => {
       <ScrollView>
         <Box style={styles.main}>
           <Text style={styles.title}>Today</Text>
-          <Box style={styles.finpay}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Payment')}
+            style={styles.finpay}>
             <Text style={styles.text}>
               Please finish your payment for vespa for Vespa Rental Jogja
             </Text>
             <Icon name="chevron-right" size={20} />
-          </Box>
+          </TouchableOpacity>
           <View style={styles.border} />
           <Box style={styles.pay}>
             <Text style={styles.text}>

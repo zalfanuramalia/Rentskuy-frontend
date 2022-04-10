@@ -42,13 +42,15 @@ const detail = (state = detailState, action) => {
       const {data} = action.payload;
       console.log(data);
       state.listVehicle = data.results;
-      state.pageInfo = data.pageInfo;
+      state.successMsg = data.message;
       state.isLoading = false;
       return {...state};
     }
     case 'ADD_VEHICLES_REJECTED': {
+      const {data} = action.payload.response;
       state.isLoading = false;
       state.err = true;
+      state.errMsg = data.message;
       return {...state};
     }
     default: {

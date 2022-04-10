@@ -33,7 +33,7 @@ const SeeHistory = ({route}) => {
         <TouchableOpacity
           onPress={() =>
             navigation.navigate('Payment', {
-              idHistory: history.historyData.usersId,
+              idHistory: history.historyData.id_users,
             })
           }>
           <View style={styles.text}>

@@ -38,12 +38,9 @@ const Login = () => {
   }, []);
 
   const goLogin = () => {
+    setVisible(true);
     dispatch(onLogin(email, password));
-    if (!auth.err) {
-      setVisible(true);
-      setControl(false);
-    }
-    setControl(true);
+    setControl(false);
   };
   return (
     <View style={styles.container}>
@@ -51,13 +48,14 @@ const Login = () => {
         <Image
           source={require('../../images/bg-login.png')}
           resizeMode="cover"
+          style={styles.bg}
         />
         <Box style={styles.forms}>
           <Text style={styles.text}>LET’S EXPLORE THE WORLDS</Text>
-          <SafeAreaView style={styles.form}>
-            {auth.err && (
+          <Box style={styles.form}>
+            {auth.errMsg && (
               <View style={styles.err}>
-                <Text style={styles.texterr}>{auth.errMsg}</Text>
+                <Text style={styles.texterr}>Wrong email or password!</Text>
               </View>
             )}
             <TextInput
@@ -79,8 +77,9 @@ const Login = () => {
               onPress={() => navigation.navigate('Forgot Password')}>
               <Text style={styles.forgot}>Forgot Password ?</Text>
             </TouchableOpacity>
-          </SafeAreaView>
+          </Box>
           <View style={styles.login}>
+            <Button style={styles.buttons} title="Login" onPress={goLogin} />
             {!auth.err && (
               <ModalPoup visible={visible}>
                 <View alignItems="center">
@@ -103,7 +102,6 @@ const Login = () => {
                 <Text style={styles.infosuccess}>Login Success!</Text>
               </ModalPoup>
             )}
-            <Button style={styles.buttons} title="Login" onPress={goLogin} />
           </View>
           <View style={styles.google}>
             <Button
@@ -126,9 +124,6 @@ const Login = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   main: {
     position: 'relative',
   },
@@ -189,7 +184,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
     borderBottomWidth: 1,
     borderBottomColor: 'white',
-    marginEnd: 235,
+    marginEnd: 255,
   },
   login: {
     marginHorizontal: 15,
@@ -235,6 +230,10 @@ const styles = StyleSheet.create({
   },
   texterr: {
     color: 'white',
+  },
+  bg: {
+    width: 502,
+    height: 881,
   },
 });
 
