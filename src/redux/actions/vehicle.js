@@ -39,7 +39,7 @@ export const onReservation = (datas, qty, countDay, date) => {
   };
 };
 
-export const addDataVehicles = async (
+export const addDataVehicles = (
   token,
   brand,
   price,
@@ -49,8 +49,9 @@ export const addDataVehicles = async (
   qty,
   image,
 ) => {
-  try {
-    const {data} = await RNFetchBlob.fetch(
+  return {
+    type: 'ADD_VEHICLES',
+    payload: RNFetchBlob.fetch(
       'POST',
       'http://192.168.1.4:5000/vehicles',
       {Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data'},
@@ -62,18 +63,12 @@ export const addDataVehicles = async (
           data: RNFetchBlob.wrap(image.uri),
         },
         {name: 'brand', data: brand},
-        {name: 'price', data: price},
+        {name: 'price', data: String(price)},
         {name: 'description', data: description},
         {name: 'location', data: location},
-        {name: 'idCategory', data: category_id},
-        {name: 'qty', data: qty},
+        {name: 'category_id', data: String(category_id)},
+        {name: 'qty', data: String(qty)},
       ],
-    );
-    return {
-      type: 'ADD_VEHICLES',
-      payload: data,
-    };
-  } catch (e) {
-    console.log(e);
-  }
+    ),
+  };
 };
