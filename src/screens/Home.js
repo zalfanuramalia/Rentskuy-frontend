@@ -35,6 +35,11 @@ const Home = ({navigation}) => {
 
   const {category, popular, auth} = useSelector(state => state);
   const [search, setSearch] = useState('');
+  useEffect(() => {
+    dispatch({
+      type: 'CLEAR_UPDATE_MESSAGE',
+    });
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(getPopular());
@@ -242,6 +247,7 @@ const Home = ({navigation}) => {
             <Image
               source={require('../../images/bg-home.png')}
               resizeMode="cover"
+              style={styles.bg}
             />
             <Box style={styles.search}>
               <Input

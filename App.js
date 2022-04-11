@@ -19,6 +19,7 @@ import Login from './src/screens/Login';
 import Signup from './src/screens/Signup';
 import ForgotPassword from './src/screens/ForgotPassword';
 import ResetPassword from './src/screens/ResetPassword';
+import Favorite from './src/screens/Favorite';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -149,6 +150,9 @@ const Main = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getProfile(auth.token));
+    dispatch({
+      type: 'CLEAR_UPDATE_MESSAGE',
+    });
   }, [auth.token, dispatch]);
   return (
     <NativeBaseProvider theme={theme}>
@@ -230,6 +234,7 @@ const Main = () => {
               component={Payment}
             />
             <MainStack.Screen name="See History" component={SeeHistory} />
+            <MainStack.Screen name="Favorite" component={Favorite} />
           </MainStack.Navigator>
         )}
       </NavigationContainer>

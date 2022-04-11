@@ -1,4 +1,4 @@
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {NativeBaseProvider, Button, Box, ScrollView} from 'native-base';
 import Stepper from '../helpers/stepper';
@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import {ReactNativeNumberFormat} from '../helpers/numberformat';
 import {useSelector, useDispatch} from 'react-redux';
 import {getDetailHistory, historyInput} from '../redux/actions/history';
+import ModalPoup from '../components/Modalpoup';
 
 const Payment = ({route}) => {
   const {reservation, history, auth, vehicle} = useSelector(state => state);
@@ -14,20 +15,20 @@ const Payment = ({route}) => {
   const [control, setControl] = useState(false);
   const dispatch = useDispatch();
   const {id: idVehicle} = route.params;
+  const [visible, setVisible] = React.useState(false);
   const randomCode = Math.floor(
     Math.pow(10, 8 - 1) +
       Math.random() * (Math.pow(10, 8) - Math.pow(10, 8 - 1) - 1),
   );
 
   useEffect(() => {
-    dispatch(getDetailHistory(auth.token, history.historyData.id_users));
-  }, [auth.token, history.historyData.id_users, dispatch]);
+    dispatch(getDetailHistory(auth.token, history.historyData.idVehicle));
+  }, [auth.token, history.historyData.idVehicle, dispatch]);
 
   useEffect(() => {
+    setVisible(true);
     if (history.historyData !== null && control) {
-      navigation.navigate('SeeHistory', {
-        idHistory: history.historyData.id_users,
-      });
+      navigation.navigate('SeeHistory');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [history.historyData]);
@@ -56,7 +57,7 @@ const Payment = ({route}) => {
             <Text style={styles.timepay}>1:59:34</Text>
             <Text style={styles.bank}>Bank account information :</Text>
             <Text style={styles.bankpay}>0290-90203-345-2</Text>
-            <Text style={styles.vehicle}>Angkasa Rental</Text>
+            <Text style={styles.vehicle}>RENTSKUY</Text>
           </Box>
           <View style={styles.border} />
           <Box style={styles.form}>
@@ -92,16 +93,40 @@ const Payment = ({route}) => {
             </Text>
             <Icon name="info-circle" />
           </Box>
-          <Button
-            style={styles.reservationBtn}
-            variant="solid"
-            _text={{
-              color: 'black',
-              fontSize: '2xl',
-            }}
-            onPress={() => navigation.navigate('See History')}>
-            Finish Payment
-          </Button>
+          <Box>
+            <Button
+              style={styles.reservationBtn}
+              variant="solid"
+              _text={{
+                color: 'black',
+                fontSize: '2xl',
+              }}
+              onPress={() => navigation.navigate('See History')}>
+              Finish Payment
+            </Button>
+            <ModalPoup visible={visible}>
+              <View alignItems="center">
+                <View style={styles.header}>
+                  <TouchableOpacity onPress={() => setVisible(false)}>
+                    <Image
+                      source={require('../../images/x.png')}
+                      style={styles.false}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View alignItems="center">
+                <Image
+                  source={require('../../images/success.png')}
+                  style={styles.success}
+                />
+              </View>
+
+              <Text style={styles.infosuccess}>
+                Your payment has been received!
+              </Text>
+            </ModalPoup>
+          </Box>
         </Box>
       </ScrollView>
     </NativeBaseProvider>
@@ -196,6 +221,26 @@ const styles = StyleSheet.create({
   },
   form2: {
     marginTop: 5,
+  },
+  false: {
+    width: 30,
+    height: 30,
+  },
+  header: {
+    width: '100%',
+    height: 40,
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+  },
+  success: {
+    height: 150,
+    width: 150,
+    marginVertical: 10,
+  },
+  infosuccess: {
+    marginVertical: 30,
+    fontSize: 20,
+    textAlign: 'center',
   },
 });
 

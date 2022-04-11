@@ -19,11 +19,16 @@ import {colors, fontStyle, fontFamily, fontSize} from '../helpers/colorStyle';
 import {DateTimePickerAndroid} from '@react-native-community/datetimepicker';
 import {useNavigation} from '@react-navigation/native';
 import {ReactNativeNumberFormat} from '../helpers/numberformat';
-import {getDetailVehicle, onReservation} from '../redux/actions/vehicle';
+import {
+  deleteVehicles,
+  getDetailVehicle,
+  onReservation,
+} from '../redux/actions/vehicle';
 import {useDispatch, useSelector} from 'react-redux';
 import {increment, decrement} from '../redux/actions/button';
 import Iconic from 'react-native-vector-icons/Fontisto';
 import {Picker} from '@react-native-picker/picker';
+import ModalPoup from '../components/Modalpoup';
 
 const Detail = ({route, navigation}) => {
   const [date, setDate] = useState(new Date());
@@ -36,6 +41,7 @@ const Detail = ({route, navigation}) => {
   const dispatch = useDispatch();
   const [control, setControl] = useState(false);
   const {id: idVehicle} = route.params;
+  const [visible, setVisible] = React.useState(false);
 
   // const navigation = useNavigation();
 
@@ -44,6 +50,12 @@ const Detail = ({route, navigation}) => {
   }, [idVehicle, dispatch]);
 
   const {vehicle, auth} = useSelector(state => state);
+
+  useEffect(() => {
+    dispatch({
+      type: 'CLEAR_UPDATE_MESSAGE',
+    });
+  }, [dispatch]);
 
   useEffect(() => {
     if (vehicle.dataDetail !== null && control) {
@@ -85,6 +97,16 @@ const Detail = ({route, navigation}) => {
     dispatch(onReservation(vehicle.detailVehicle, qty, countDay, date));
     navigation.navigate('Reservation', {id: idVehicle});
     // setControl(true);
+  };
+
+  const deleteHandler = id => {
+    setVisible(true);
+    dispatch(deleteVehicles(idVehicle));
+  };
+
+  const closeHandler = () => {
+    setVisible(false);
+    navigation.navigate('Home');
   };
   return (
     <NativeBaseProvider>
@@ -306,14 +328,34 @@ const Detail = ({route, navigation}) => {
                   </Text>
                 </Box>
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('ChatList')}
+                  onPress={deleteHandler}
                   style={styles.heartIconWrapper}>
-                  <Icons
-                    name="chatbubble-outline"
+                  <Icon
+                    name="trash-alt"
                     style={styles.chat}
-                    size={30}
+                    size={10}
                     color="#FFCD61"
                   />
+                  <ModalPoup visible={visible}>
+                    <View alignItems="center">
+                      <View style={styles.header}>
+                        <TouchableOpacity onPress={closeHandler}>
+                          <Image
+                            source={require('../../images/x.png')}
+                            style={styles.false}
+                          />
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                    <View alignItems="center">
+                      <Image
+                        source={require('../../images/success.png')}
+                        style={styles.success}
+                      />
+                    </View>
+
+                    <Text style={styles.infosuccess}>Delete Successfully!</Text>
+                  </ModalPoup>
                 </TouchableOpacity>
               </Box>
               <Box style={styles.descWrapper}>
@@ -548,6 +590,26 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: 10,
     backgroundColor: 'wheat',
+  },
+  false: {
+    width: 30,
+    height: 30,
+  },
+  header: {
+    width: '100%',
+    height: 40,
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+  },
+  success: {
+    height: 150,
+    width: 150,
+    marginVertical: 10,
+  },
+  infosuccess: {
+    marginVertical: 30,
+    fontSize: 20,
+    textAlign: 'center',
   },
 });
 

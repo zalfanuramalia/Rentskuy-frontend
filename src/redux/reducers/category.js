@@ -95,6 +95,12 @@ const category = (state = categoryState, action) => {
       state.isError = true;
       return {...state};
     }
+    case 'CLEAR_UPDATE_MESSAGE': {
+      return {
+        ...state,
+        successMsg: '',
+      };
+    }
     default: {
       return {...state};
     }

@@ -57,13 +57,17 @@ const Profile = () => {
             <HStack>
               <Box alignItems="center">
                 {/* <Stack direction="row" space={3} alignItems="center"> */}
-                <Image
-                  source={{uri: `${auth.userData.image}`}}
-                  resizeMode="cover"
-                  style={styles.profileImg}
-                  width={90}
-                  height={90}
-                />
+                {auth.userData?.image ? (
+                  <Image
+                    source={{uri: `${auth.userData.image}`}}
+                    resizeMode="cover"
+                    style={styles.profileImg}
+                    width={90}
+                    height={90}
+                  />
+                ) : (
+                  <Text>Set your picture</Text>
+                )}
                 <Box style={styles.info}>
                   <Text color="white" fontSize="xl" style={styles.name}>
                     {auth.userData?.name}
@@ -80,7 +84,7 @@ const Profile = () => {
               </Box>
             </HStack>
           </Box>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('Favorite')}>
             <View style={styles.viewmore}>
               <Text style={styles.text}>Your Favourites</Text>
               <Icon name="chevron-right" size={20} />

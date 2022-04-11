@@ -46,6 +46,11 @@ const Signup = () => {
     setControl(true);
   };
 
+  const closeHandler = () => {
+    setVisible(false);
+    navigation.navigate('Login');
+  };
+
   return (
     <View style={styles.container}>
       <Box style={styles.main}>
@@ -83,7 +88,7 @@ const Signup = () => {
               <ModalPoup visible={visible}>
                 <View alignItems="center">
                   <View style={styles.header}>
-                    <TouchableOpacity onPress={() => setVisible(false)}>
+                    <TouchableOpacity onPress={closeHandler}>
                       <Image
                         source={require('../../images/x.png')}
                         style={styles.false}

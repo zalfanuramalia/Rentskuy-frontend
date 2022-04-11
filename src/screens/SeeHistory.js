@@ -85,7 +85,9 @@ const SeeHistory = ({route}) => {
             color: 'black',
             fontSize: '2xl',
           }}
-          onPress={() => navigation.navigate('Histories')}>
+          onPress={() =>
+            navigation.navigate('Histories', {id: auth.userData.id})
+          }>
           <Text style={styles.total}>
             Total :{' '}
             {
