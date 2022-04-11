@@ -18,6 +18,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {forgotpass} from '../redux/actions/password';
 import {Box} from 'native-base';
 import ModalPoup from '../components/Modalpoup';
+import PushNotification from 'react-native-push-notification';
 
 const ForgotPassword = () => {
   const {password} = useSelector(state => state);
@@ -33,6 +34,15 @@ const ForgotPassword = () => {
     });
   }, [dispatch]);
 
+  const localNotif = () => {
+    PushNotification.localNotification({
+      channelId: 'rent-skuy',
+      message:
+        "Your OTP has been sent. Please check your email! Don't give your OTP to anyone",
+      title: 'Order Information',
+    });
+  };
+
   const sendCode = () => {
     setVisible(true);
     dispatch(forgotpass(email));
@@ -41,6 +51,7 @@ const ForgotPassword = () => {
   const closeHandler = () => {
     setVisible(false);
     navigation.navigate('Reset Password');
+    localNotif();
   };
   return (
     <View style={styles.container}>

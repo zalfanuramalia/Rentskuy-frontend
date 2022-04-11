@@ -123,7 +123,9 @@ const Search = ({navigation}) => {
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}>
           {listVehicles.map((data, index) => (
-            <TouchableOpacity onPress={() => navigation.navigate('Details')}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Details')}
+              key={index}>
               <SearchList
                 image={data.image}
                 name={data.name}

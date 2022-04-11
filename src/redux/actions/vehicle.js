@@ -53,7 +53,7 @@ export const addDataVehicles = (
     type: 'ADD_VEHICLES',
     payload: RNFetchBlob.fetch(
       'POST',
-      'http://192.168.1.4:5000/vehicles',
+      'http://192.168.1.8:5000/vehicles',
       {Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data'},
       [
         {
@@ -70,5 +70,12 @@ export const addDataVehicles = (
         {name: 'qty', data: String(qty)},
       ],
     ),
+  };
+};
+
+export const deleteVehicles = id => {
+  return {
+    type: 'DELETE_VEHICLES',
+    payload: http().delete(`/vehicles/${id}`),
   };
 };
