@@ -4,7 +4,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 export const getAllVehicles = () => {
   return {
     type: 'ALL_VEHICLES',
-    payload: http().get('/vehicles'),
+    payload: http().get('/vehicles?limit=50'),
   };
 };
 
@@ -122,5 +122,22 @@ export const updateVehicle = (
         {name: 'qty', data: String(qty)},
       ],
     ),
+  };
+};
+
+export const getSearch = (dataFilter, page = 1) => {
+  let apiUrl = `/vehicles?page=${page}&limit=5`;
+  let keywoard = '';
+  let resDataFilter = {...dataFilter};
+  Object.keys(dataFilter).forEach(item => {
+    if (item) {
+      apiUrl += `&${item}=${dataFilter[item]}`;
+      keywoard += `${dataFilter[item]}-`;
+      // resDataFilter = {...resDataFilter, item: dataFilter[item]};
+    }
+  });
+  return {
+    type: 'GET_SEARCH',
+    payload: http().get(apiUrl),
   };
 };
