@@ -1,6 +1,13 @@
 import http from '../../helpers/http';
 import RNFetchBlob from 'rn-fetch-blob';
 
+export const getAllVehicles = () => {
+  return {
+    type: 'ALL_VEHICLES',
+    payload: http().get('/vehicles'),
+  };
+};
+
 export const getDetailVehicle = id => {
   return {
     type: 'GET_DETAIL',
@@ -77,5 +84,43 @@ export const deleteVehicles = id => {
   return {
     type: 'DELETE_VEHICLES',
     payload: http().delete(`/vehicles/${id}`),
+  };
+};
+
+export const updateVehicle = (
+  id,
+  token,
+  brand,
+  price,
+  can_prepayment,
+  isAvailable,
+  location,
+  qty,
+  image,
+) => {
+  return {
+    type: 'UPDATE_VEHICLES',
+    payload: RNFetchBlob.fetch(
+      'PATCH',
+      `http://192.168.1.8:5000/vehicles/${id}`,
+      {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data',
+      },
+      [
+        {
+          name: 'image',
+          filename: image.fileName,
+          type: image.type,
+          data: RNFetchBlob.wrap(image.uri),
+        },
+        {name: 'brand', data: brand},
+        {name: 'price', data: String(price)},
+        {name: 'can_prepayment', data: can_prepayment},
+        {name: 'isAvailable', data: isAvailable},
+        {name: 'location', data: location},
+        {name: 'qty', data: String(qty)},
+      ],
+    ),
   };
 };

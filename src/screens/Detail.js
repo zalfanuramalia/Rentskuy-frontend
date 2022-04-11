@@ -23,14 +23,22 @@ import {
   deleteVehicles,
   getDetailVehicle,
   onReservation,
+  updateVehicle,
 } from '../redux/actions/vehicle';
 import {useDispatch, useSelector} from 'react-redux';
 import {increment, decrement} from '../redux/actions/button';
 import Iconic from 'react-native-vector-icons/Fontisto';
 import {Picker} from '@react-native-picker/picker';
 import ModalPoup from '../components/Modalpoup';
+import {launchImageLibrary} from 'react-native-image-picker';
 
 const Detail = ({route, navigation}) => {
+  const [brand, setBrand] = useState('');
+  const [price, setPrice] = useState(0);
+  const [can_prepayment, setCan_Preypayment] = useState('');
+  const [isAvailable, setIsAvailable] = useState('');
+  const [location, setLocation] = useState('');
+  const [image, setImage] = useState('');
   const [date, setDate] = useState(new Date());
   const [day, setDay] = useState(0);
   const [qty, setQty] = useState(0);
@@ -99,6 +107,11 @@ const Detail = ({route, navigation}) => {
     // setControl(true);
   };
 
+  const addImage = async () => {
+    const photo = await launchImageLibrary({});
+    setImage(photo.assets[0]);
+  };
+
   const deleteHandler = id => {
     setVisible(true);
     dispatch(deleteVehicles(idVehicle));
@@ -107,6 +120,23 @@ const Detail = ({route, navigation}) => {
   const closeHandler = () => {
     setVisible(false);
     navigation.navigate('Home');
+  };
+
+  const updateVehicleHandler = () => {
+    setVisible(true);
+    dispatch(
+      updateVehicle(
+        vehicle.detailVehicle.id,
+        auth.token,
+        brand,
+        price,
+        can_prepayment,
+        isAvailable,
+        location,
+        qty,
+        image,
+      ),
+    );
   };
   return (
     <NativeBaseProvider>
@@ -271,11 +301,19 @@ const Detail = ({route, navigation}) => {
         <SafeAreaView>
           <ScrollView>
             <View style={styles.wrapper}>
-              <Image
-                source={{uri: vehicle.detailVehicle.image} || order}
-                resizeMode="contain"
-                style={styles.img}
-              />
+              {image ? (
+                <Image
+                  source={{uri: image.uri}}
+                  resizeMode="contain"
+                  style={styles.img}
+                />
+              ) : (
+                <Image
+                  source={{uri: vehicle.detailVehicle.image} || order}
+                  resizeMode="contain"
+                  style={styles.img}
+                />
+              )}
               <Box style={styles.item}>
                 <View style={styles.back}>
                   <TouchableOpacity
@@ -293,23 +331,8 @@ const Detail = ({route, navigation}) => {
                       4.5 <Icon name="star" color="white" />
                     </Text>
                   </LinearGradient>
-                  <TouchableOpacity onPress={() => setFavourite(!favourite)}>
-                    {favourite ? (
-                      <Icon
-                        name="heart"
-                        size={20}
-                        color="red"
-                        backgroundColor="red"
-                        style={styles.hearticon}
-                      />
-                    ) : (
-                      <Icon
-                        name="heart"
-                        size={20}
-                        color="white"
-                        style={styles.hearticon}
-                      />
-                    )}
+                  <TouchableOpacity style={styles.hearticon} onPress={addImage}>
+                    <Icon name="pencil-alt" size={20} color="white" />
                   </TouchableOpacity>
                 </View>
               </Box>
@@ -317,15 +340,22 @@ const Detail = ({route, navigation}) => {
             <Stack style={styles.content}>
               <Box style={[styles.detailHeadWrapper]}>
                 <Box>
-                  <Text style={styles.textPrice}>
-                    {vehicle.detailVehicle.brand}
-                  </Text>
-                  <Text style={styles.textPrice}>
-                    <ReactNativeNumberFormat
-                      value={vehicle.detailVehicle.price}
-                      suffix={'/day'}
-                    />
-                  </Text>
+                  <TextInput
+                    style={styles.textBrand}
+                    onChangeText={setBrand}
+                    value={brand ? brand : vehicle.detailVehicle.brand}
+                    placeholderTextColor="grey"
+                  />
+                  <TextInput
+                    style={styles.textPrice}
+                    value={
+                      price
+                        ? `${price.toLocaleString()}`
+                        : String(vehicle.detailVehicle?.price)
+                    }
+                    onChangeText={setPrice}
+                    keyboardType="number"
+                  />
                 </Box>
                 <TouchableOpacity
                   onPress={deleteHandler}
@@ -359,12 +389,16 @@ const Detail = ({route, navigation}) => {
                 </TouchableOpacity>
               </Box>
               <Box style={styles.descWrapper}>
-                <Text style={styles.desc}>
-                  Max for {vehicle.detailVehicle.qty} person
-                </Text>
-                <Text style={styles.desc}>
-                  {vehicle.detailVehicle.can_prepayment}
-                </Text>
+                <Text style={styles.desc}>Max for 1 person</Text>
+                <TextInput
+                  onChangeText={setCan_Preypayment}
+                  value={
+                    can_prepayment
+                      ? can_prepayment
+                      : vehicle.detailVehicle.can_prepayment
+                  }
+                  placeholderTextColor="grey"
+                />
                 <Text style={[styles.desc, styles.availableText]}>
                   {vehicle.detailVehicle.isAvailable}
                 </Text>
@@ -372,9 +406,12 @@ const Detail = ({route, navigation}) => {
 
               <Box style={styles.infoWrapper}>
                 <Icon name="map-marker-alt" style={styles.mapWrapper} />
-                <Text style={styles.location}>
-                  {vehicle.detailVehicle.location}
-                </Text>
+                <TextInput
+                  style={styles.location}
+                  onChangeText={setLocation}
+                  value={location ? location : vehicle.detailVehicle.location}
+                  placeholderTextColor="grey"
+                />
               </Box>
 
               <Box style={styles.infoWrapper}>
@@ -409,9 +446,9 @@ const Detail = ({route, navigation}) => {
                 <Picker
                   style={styles.picker}
                   placeholder="update stock status"
-                  selectedValue={idCategory}
+                  selectedValue={isAvailable}
                   onValueChange={(itemValue, itemIndex) =>
-                    setIdCategory(itemValue)
+                    setIsAvailable(itemValue)
                   }>
                   {/* <Picker.item label="Select Location" color="gray" value={null} /> */}
                   <Picker.Item label="Update stock status" color="gray" />
@@ -421,16 +458,36 @@ const Detail = ({route, navigation}) => {
                     color="gray"
                   />
                   <Picker.Item
-                    label="Not Available"
+                    label="Full Booked"
                     value={'Not Available'}
                     color="gray"
                   />
                 </Picker>
               </Box>
+              <ModalPoup visible={visible}>
+                <View alignItems="center">
+                  <View style={styles.header}>
+                    <TouchableOpacity onPress={() => setVisible(false)}>
+                      <Image
+                        source={require('../../images/x.png')}
+                        style={styles.false}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+                <View alignItems="center">
+                  <Image
+                    source={require('../../images/success.png')}
+                    style={styles.success}
+                  />
+                </View>
+
+                <Text style={styles.infosuccess}>Update Successfully!</Text>
+              </ModalPoup>
               <Button
                 style={styles.reservationBtn}
                 variant="solid"
-                onPress={() => navigation.navigate('Home')}
+                onPress={updateVehicleHandler}
                 _text={{
                   color: 'black',
                   fontSize: '2xl',
@@ -501,6 +558,10 @@ const styles = StyleSheet.create({
     marginTop: 16,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  textBrand: {
+    fontSize: 28,
   },
   textPrice: {
     fontSize: 28,
@@ -515,6 +576,10 @@ const styles = StyleSheet.create({
     fontFamily: fontStyle(fontFamily.primary, 'regular'),
     fontSize: fontSize.md,
     lineHeight: 22,
+    marginHorizontal: 5,
+  },
+  textDesc: {
+    marginHorizontal: 3,
   },
   availableText: {
     fontFamily: fontStyle(fontFamily.primary, 'bold'),
@@ -525,8 +590,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     fontSize: 16,
+    marginHorizontal: 5,
   },
   counterSection: {
+    marginHorizontal: 5,
     marginTop: 16,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -548,10 +615,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   pickerWrap: {
-    marginTop: 10,
+    marginTop: 15,
     borderWidth: 1,
     borderColor: 'rgba(99, 110, 114,0.7)',
     borderRadius: 10,
+    marginHorizontal: 5,
   },
   datePickerWrapper: {
     marginTop: 24,
@@ -587,8 +655,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   reservationBtn: {
+    marginHorizontal: 5,
     borderRadius: 10,
-    marginTop: 10,
+    marginTop: 15,
     backgroundColor: 'wheat',
   },
   false: {
