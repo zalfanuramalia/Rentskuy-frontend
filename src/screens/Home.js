@@ -113,7 +113,7 @@ const Home = ({navigation}) => {
               <Text style={styles.recommend}>Recommended</Text>
               <TouchableOpacity
                 style={styles.viewmore}
-                onPress={() => navigation.navigate('Search')}>
+                onPress={() => navigation.navigate('Category')}>
                 <Text style={styles.text}>View more</Text>
                 <Icon name="chevron-right" size={20} />
               </TouchableOpacity>

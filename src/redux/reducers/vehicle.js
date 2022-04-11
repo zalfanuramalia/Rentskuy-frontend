@@ -9,6 +9,7 @@ const detailState = {
   err: false,
   errMsg: '',
   successMsg: null,
+  search: '',
 };
 
 const detail = (state = detailState, action) => {
@@ -45,6 +46,24 @@ const detail = (state = detailState, action) => {
       return {...state};
     }
     case 'GET_DETAIL_REJECTED': {
+      state.isLoading = false;
+      state.err = true;
+      return {...state};
+    }
+    case 'GET_SEARCH_PENDING': {
+      state.isLoading = true;
+      state.err = false;
+      return {...state};
+    }
+    case 'GET_SEARCH_FULFILLED': {
+      const {data} = action.payload;
+      console.log(data);
+      state.search = data.result;
+      state.pageInfo = data.pageInfo;
+      state.isLoading = false;
+      return {...state};
+    }
+    case 'GET_SEARCH_REJECTED': {
       state.isLoading = false;
       state.err = true;
       return {...state};
