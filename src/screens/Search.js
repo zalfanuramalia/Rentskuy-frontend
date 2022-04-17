@@ -92,6 +92,7 @@ const Search = ({navigation}) => {
                       <View style={styles.left}>
                         <Image
                           source={{uri: `${datas.image}`}}
+                          alt={datas.brand}
                           resizeMode="contain"
                           borderRadius={30}
                           style={styles.image}

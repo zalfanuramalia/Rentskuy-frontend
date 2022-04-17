@@ -85,7 +85,7 @@ const Order = ({route}) => {
           </Text>
           <Text
             style={styles.desc}>{`${vehicle.dataDetail.countDay} days`}</Text>
-          <Text style={styles.desc}>Jan 18 2021 to Jan 22 2021</Text>
+          <Text style={styles.desc}>April 12 2021 to April 13 2021</Text>
         </Box>
         <View style={styles.border} />
         <Box style={styles.price}>

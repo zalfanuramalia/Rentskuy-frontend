@@ -69,6 +69,7 @@ const MainNav = () => {
       }}>
       <BottomTab.Screen
         options={{
+          tabBarActiveTintColor: 'wheat',
           tabBarIcon: ({focused, color, size}) => (
             <Icons name="home" color={color} size={size} />
           ),
@@ -79,6 +80,7 @@ const MainNav = () => {
       />
       <BottomTab.Screen
         options={{
+          tabBarActiveTintColor: 'wheat',
           tabBarIcon: ({focused, color, size}) => (
             <Icons name="search" color={color} size={size} />
           ),
@@ -89,6 +91,7 @@ const MainNav = () => {
       />
       <BottomTab.Screen
         options={{
+          tabBarActiveTintColor: 'wheat',
           tabBarIcon: ({focused, color, size}) => (
             <Icons name="th-list" color={color} size={size} />
           ),
@@ -99,6 +102,7 @@ const MainNav = () => {
       />
       <BottomTab.Screen
         options={{
+          tabBarActiveTintColor: 'wheat',
           tabBarIcon: ({focused, color, size}) => (
             <Icons name="user" color={color} size={size} />
           ),

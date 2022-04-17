@@ -37,7 +37,7 @@ const auth = (state = initialState, action) => {
     }
     case 'GET_PROFILE_FULFILLED': {
       const {data} = action.payload;
-      state.userData = data.result;
+      state.userData = data.results;
       state.pageInfo = data.info;
       state.isLoading = false;
       return {...state};
@@ -58,7 +58,7 @@ const auth = (state = initialState, action) => {
     case 'UPDATE_PROFILE_FULFILLED': {
       const {data} = action.payload;
       console.log(data);
-      state.profile = data.result;
+      state.profile = data.results;
       state.successMsg = data.message;
       state.isLoading = false;
       return {...state};

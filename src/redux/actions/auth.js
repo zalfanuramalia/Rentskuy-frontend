@@ -38,7 +38,7 @@ export const updateProfile = (
     type: 'UPDATE_PROFILE',
     payload: RNFetchBlob.fetch(
       'PATCH',
-      `http://192.168.1.8:5000/users/${id}`,
+      `http://192.168.1.9:5000/users/${id}`,
       {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'multipart/form-data',

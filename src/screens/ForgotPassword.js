@@ -39,7 +39,7 @@ const ForgotPassword = () => {
       channelId: 'rent-skuy',
       message:
         "Your OTP has been sent. Please check your email! Don't give your OTP to anyone",
-      title: 'Order Information',
+      title: 'Reset Password Information',
     });
   };
 

@@ -22,7 +22,7 @@ const detail = (state = detailState, action) => {
     case 'ALL_VEHICLES_FULFILLED': {
       const {data} = action.payload;
       console.log(data);
-      state.allVehicle = data.result;
+      state.allVehicle = data.results;
       state.pageInfo = data.pageInfo;
       state.isLoading = false;
       return {...state};
@@ -58,7 +58,7 @@ const detail = (state = detailState, action) => {
     case 'GET_SEARCH_FULFILLED': {
       const {data} = action.payload;
       console.log(data);
-      state.search = data.result;
+      state.search = data.results;
       state.pageInfo = data.pageInfo;
       state.isLoading = false;
       return {...state};
@@ -100,7 +100,7 @@ const detail = (state = detailState, action) => {
     case 'DELETE_VEHICLES_FULFILLED': {
       const {data} = action.payload;
       console.log(data);
-      state.listVehicle = data.result;
+      state.listVehicle = data.results;
       state.successMsg = data.message;
       state.isLoading = false;
       return {...state};
