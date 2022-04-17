@@ -40,7 +40,7 @@ const Login = () => {
   const goLogin = () => {
     setVisible(true);
     dispatch(onLogin(email, password));
-    setControl(true);
+    // setControl(true);
   };
   return (
     <View style={styles.container}>
@@ -53,7 +53,7 @@ const Login = () => {
         <Box style={styles.forms}>
           <Text style={styles.text}>LET’S EXPLORE THE WORLDS</Text>
           <Box style={styles.form}>
-            {auth.errMsg && control && (
+            {auth.errMsg && (
               <View style={styles.err}>
                 <Text style={styles.texterr}>Wrong email or password!</Text>
               </View>

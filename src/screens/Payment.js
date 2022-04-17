@@ -22,8 +22,8 @@ const Payment = ({route}) => {
   );
 
   useEffect(() => {
-    dispatch(getDetailHistory(auth.token, history.historyData.idVehicle));
-  }, [auth.token, history.historyData.idVehicle, dispatch]);
+    dispatch(getDetailHistory(auth.token, auth.userData.id));
+  }, [auth.token, auth.userData.id, dispatch]);
 
   useEffect(() => {
     setVisible(true);
@@ -82,7 +82,7 @@ const Payment = ({route}) => {
             </Text>
             <Text>{reservation.reservationData.payment_type}</Text>
             <Text>{`${vehicle.dataDetail.countDay} days`}</Text>
-            <Text>Jan 18 2021 to Jan 22 2021</Text>
+            <Text>April 12 2021 to April 13 2021</Text>
           </Box>
           <View style={styles.border} />
           <Box style={styles.price}>

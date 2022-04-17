@@ -4,12 +4,16 @@ import {Box, ScrollView} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useDispatch, useSelector} from 'react-redux';
-import {getAllHistoryUser} from '../redux/actions/history';
+import {getAllAdminHistory, getAllHistoryUser} from '../redux/actions/history';
 import {ReactNativeNumberFormat} from '../helpers/numberformat';
 
 const History = ({navigation}) => {
   const {history, auth} = useSelector(state => state);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAllAdminHistory(auth.token));
+  }, [auth.token, dispatch]);
 
   useEffect(() => {
     dispatch(getAllHistoryUser(auth.token, auth.userData.id));
@@ -35,36 +39,69 @@ const History = ({navigation}) => {
             <Text style={styles.title}>A week ago</Text>
           </Box>
           <SafeAreaView>
-            <ScrollView>
-              {history.listHistory.map(item => {
-                return (
-                  <Box key={item.id} style={styles.listVehicles}>
-                    <Box>
-                      <Image
-                        source={{uri: `${item.image}`}}
-                        resizeMode="contain"
-                        style={styles.img}
-                      />
-                    </Box>
-                    <Box style={styles.right}>
-                      <Text fontSize={'lg'} bold>
-                        {item.vehicleName}
-                      </Text>
-                      <Text>Jan 18 to 21 2021</Text>
-                      <Text fontSize={'lg'} bold>
-                        Prepayment : Rp.245.000
-                        {/* {
+            {auth.userData.role === 'Customer' ? (
+              <ScrollView>
+                {history.listHistory.map(item => {
+                  return (
+                    <Box key={item.id} style={styles.listVehicles}>
+                      <Box>
+                        <Image
+                          source={{uri: `${item.image}`}}
+                          resizeMode="contain"
+                          style={styles.img}
+                        />
+                      </Box>
+                      <Box style={styles.right}>
+                        <Text fontSize={'lg'} bold>
+                          {item.vehicleName}
+                        </Text>
+                        <Text>Jan 18 to 21 2022</Text>
+                        <Text fontSize={'lg'} bold>
+                          Prepayment : Rp.245.000
+                          {/* {
                         <ReactNativeNumberFormat
                           value={vehicle.dataDetail.totalPayment}
                         />
                       } */}
-                      </Text>
-                      <Text>Finished</Text>
+                        </Text>
+                        <Text>No Returned</Text>
+                      </Box>
                     </Box>
-                  </Box>
-                );
-              })}
-            </ScrollView>
+                  );
+                })}
+              </ScrollView>
+            ) : (
+              <ScrollView>
+                {history.allHistoryData.map(item => {
+                  return (
+                    <Box key={item.id} style={styles.listVehicles}>
+                      <Box>
+                        <Image
+                          source={{uri: `${item.image}`}}
+                          resizeMode="contain"
+                          style={styles.img}
+                        />
+                      </Box>
+                      <Box style={styles.right}>
+                        <Text fontSize={'lg'} bold>
+                          {item.vehicleName}
+                        </Text>
+                        <Text>Jan 18 to 21 2022</Text>
+                        <Text fontSize={'lg'} bold>
+                          Prepayment : Rp.245.000
+                          {/* {
+                        <ReactNativeNumberFormat
+                          value={vehicle.dataDetail.totalPayment}
+                        />
+                      } */}
+                        </Text>
+                        <Text>No Returned</Text>
+                      </Box>
+                    </Box>
+                  );
+                })}
+              </ScrollView>
+            )}
           </SafeAreaView>
         </Box>
       </ScrollView>

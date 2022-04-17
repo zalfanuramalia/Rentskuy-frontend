@@ -31,6 +31,7 @@ import Iconic from 'react-native-vector-icons/Fontisto';
 import {Picker} from '@react-native-picker/picker';
 import ModalPoup from '../components/Modalpoup';
 import {launchImageLibrary} from 'react-native-image-picker';
+import ModalPoups from '../components/Modalpoups';
 
 const Detail = ({route, navigation}) => {
   const [brand, setBrand] = useState('');
@@ -122,12 +123,17 @@ const Detail = ({route, navigation}) => {
     navigation.navigate('Home');
   };
 
+  const closeUpdateHandler = () => {
+    setVisible(false);
+  };
+
   const updateVehicleHandler = () => {
     setVisible(true);
     dispatch(
       updateVehicle(
         vehicle.detailVehicle.id,
         auth.token,
+        vehicle.detailVehicle.category_id,
         brand,
         price,
         can_prepayment,
@@ -354,9 +360,28 @@ const Detail = ({route, navigation}) => {
                         : String(vehicle.detailVehicle?.price)
                     }
                     onChangeText={setPrice}
-                    keyboardType="number"
                   />
                 </Box>
+                <ModalPoups visible={visible}>
+                  <View alignItems="center">
+                    <View style={styles.header}>
+                      <TouchableOpacity onPress={closeHandler}>
+                        <Image
+                          source={require('../../images/x.png')}
+                          style={styles.false}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                  <View alignItems="center">
+                    <Image
+                      source={require('../../images/success.png')}
+                      style={styles.success}
+                    />
+                  </View>
+
+                  <Text style={styles.infosuccess}>Delete Successfully!</Text>
+                </ModalPoups>
                 <TouchableOpacity
                   onPress={deleteHandler}
                   style={styles.heartIconWrapper}>
@@ -366,26 +391,6 @@ const Detail = ({route, navigation}) => {
                     size={10}
                     color="#FFCD61"
                   />
-                  <ModalPoup visible={visible}>
-                    <View alignItems="center">
-                      <View style={styles.header}>
-                        <TouchableOpacity onPress={closeHandler}>
-                          <Image
-                            source={require('../../images/x.png')}
-                            style={styles.false}
-                          />
-                        </TouchableOpacity>
-                      </View>
-                    </View>
-                    <View alignItems="center">
-                      <Image
-                        source={require('../../images/success.png')}
-                        style={styles.success}
-                      />
-                    </View>
-
-                    <Text style={styles.infosuccess}>Delete Successfully!</Text>
-                  </ModalPoup>
                 </TouchableOpacity>
               </Box>
               <Box style={styles.descWrapper}>
@@ -467,7 +472,7 @@ const Detail = ({route, navigation}) => {
               <ModalPoup visible={visible}>
                 <View alignItems="center">
                   <View style={styles.header}>
-                    <TouchableOpacity onPress={() => setVisible(false)}>
+                    <TouchableOpacity onPress={closeUpdateHandler}>
                       <Image
                         source={require('../../images/x.png')}
                         style={styles.false}

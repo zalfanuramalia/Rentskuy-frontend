@@ -1,6 +1,7 @@
 const dataHistory = {
   listHistory: [],
   historyData: null,
+  allHistoryData: {},
   isError: false,
   isLoading: false,
   errMessage: null,
@@ -38,6 +39,9 @@ const history = (state = dataHistory, action) => {
     }
     case 'ALL_HISTORY_FULFILLED': {
       const {data} = action.payload;
+      if (!Array.isArray(data)) {
+        state.data = [data];
+      }
       state.listHistory = data.results;
       state.isLoading = false;
       state.isError = false;
@@ -57,13 +61,33 @@ const history = (state = dataHistory, action) => {
     }
     case 'HISTORY_DETAIL_FULFILLED': {
       const {data} = action.payload;
-      state.historyData = data.result;
+      state.historyData = data.results;
       state.isLoading = false;
       state.isError = false;
       state.message = data.message;
       return {...state};
     }
     case 'HISTORY_DETAIL_REJECTED': {
+      const {data} = action.payload.response;
+      state.isLoading = false;
+      state.isError = true;
+      state.errMessage = data.message;
+      return {...state};
+    }
+    case 'GET_ALL_HISTORY_PENDING': {
+      state.isLoading = true;
+      return {...state};
+    }
+    case 'GET_ALL_HISTORY_FULFILLED': {
+      const {data} = action.payload;
+      console.log(data);
+      state.allHistoryData = data.result;
+      state.isLoading = false;
+      state.isError = false;
+      state.message = data.message;
+      return {...state};
+    }
+    case 'GET_ALL_HISTORY_REJECTED': {
       const {data} = action.payload.response;
       state.isLoading = false;
       state.isError = true;

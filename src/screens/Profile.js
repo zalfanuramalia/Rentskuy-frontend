@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
   textinput: {
     marginHorizontal: 15,
     marginVertical: 15,
-    marginTop: 190,
+    marginTop: 250,
   },
 });
 

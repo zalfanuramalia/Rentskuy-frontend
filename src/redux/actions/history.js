@@ -29,3 +29,10 @@ export const getAllHistoryUser = (token, id) => {
     payload: http(token).get(`/history/users/${id}`),
   };
 };
+
+export const getAllAdminHistory = token => {
+  return {
+    type: 'GET_ALL_HISTORY',
+    payload: http(token).get('/history'),
+  };
+};

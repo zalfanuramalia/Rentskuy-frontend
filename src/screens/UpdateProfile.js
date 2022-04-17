@@ -23,6 +23,7 @@ import {getProfile, updateProfile} from '../redux/actions/auth';
 import RNFetchBlob from 'rn-fetch-blob';
 import {launchImageLibrary} from 'react-native-image-picker';
 import ModalPoup from '../components/Modalpoup';
+import moment from 'moment';
 import uploads from '../../images/upload.png';
 
 const UpdateProfile = ({route}) => {
@@ -193,7 +194,13 @@ const UpdateProfile = ({route}) => {
               variant="underlined"
               placeholder="Your Date of Birth"
               // defaultValue={auth.userData.birthdate}
-              value={birthdate ? birthdate : auth.userData.birthdate}
+              value={
+                birthdate
+                  ? moment(birthdate.toLocaleString()).format('YYYY-MM-DD')
+                  : moment(auth.userData.birthdate.toLocaleString()).format(
+                      'YYYY-MM-DD',
+                    )
+              }
               onChangeText={setBirthdate}
             />
           </Stack>

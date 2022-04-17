@@ -17,7 +17,7 @@ const popular = (state = popularState, action) => {
     case 'GET_POPULAR_FULFILLED': {
       const {data} = action.payload;
       console.log(data);
-      state.popular = data.result;
+      state.popular = data.results;
       state.pageInfo = data.pageInfo;
       state.isLoading = false;
       return {...state};

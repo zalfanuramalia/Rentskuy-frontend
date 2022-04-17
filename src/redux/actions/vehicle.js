@@ -60,7 +60,7 @@ export const addDataVehicles = (
     type: 'ADD_VEHICLES',
     payload: RNFetchBlob.fetch(
       'POST',
-      'http://192.168.1.8:5000/vehicles',
+      'http://192.168.1.9:5000/vehicles',
       {Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data'},
       [
         {
@@ -90,6 +90,7 @@ export const deleteVehicles = id => {
 export const updateVehicle = (
   id,
   token,
+  category_id,
   brand,
   price,
   can_prepayment,
@@ -102,7 +103,7 @@ export const updateVehicle = (
     type: 'UPDATE_VEHICLES',
     payload: RNFetchBlob.fetch(
       'PATCH',
-      `http://192.168.1.8:5000/vehicles/${id}`,
+      `http://192.168.1.9:5000/vehicles/${id}`,
       {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'multipart/form-data',
@@ -114,6 +115,7 @@ export const updateVehicle = (
           type: image.type,
           data: RNFetchBlob.wrap(image.uri),
         },
+        {name: 'category_id', data: String(category_id)},
         {name: 'brand', data: brand},
         {name: 'price', data: String(price)},
         {name: 'can_prepayment', data: can_prepayment},
@@ -133,11 +135,48 @@ export const getSearch = (dataFilter, page = 1) => {
     if (item) {
       apiUrl += `&${item}=${dataFilter[item]}`;
       keywoard += `${dataFilter[item]}-`;
-      // resDataFilter = {...resDataFilter, item: dataFilter[item]};
     }
   });
   return {
     type: 'GET_SEARCH',
     payload: http().get(apiUrl),
+    keywoard: keywoard,
+    dataFilter: resDataFilter,
+  };
+};
+
+export const getFilter = (dataFilter, page = 1) => {
+  return async dispatch => {
+    dispatch({
+      type: 'GET_SEARCH_LOADING',
+    });
+    try {
+      let apiUrl = `/vehicles?limit=5&page=${page}`;
+      let keywoard = '';
+      let resDataFilter = {...dataFilter};
+      Object.keys(dataFilter).forEach(item => {
+        if (item) {
+          apiUrl += `&${item}=${dataFilter[item]}`;
+          keywoard += `${dataFilter[item]}-`;
+          // resDataFilter = {...resDataFilter, item: dataFilter[item]};
+        }
+      });
+      const {data} = await http().get(apiUrl);
+      let type = 'GET_SEARCH';
+      if (page > 1) {
+        type = 'GET_NEXT_SEARCH';
+      }
+      dispatch({
+        type,
+        payload: data,
+        keywoard: keywoard,
+        dataFilter: resDataFilter,
+      });
+    } catch (err) {
+      dispatch({
+        type: 'GET_SEARCH_ERR',
+        payload: err.response.data.message,
+      });
+    }
   };
 };
