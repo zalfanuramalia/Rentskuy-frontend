@@ -18,7 +18,7 @@ const Search = ({navigation}) => {
   const vehicle = useSelector(state => state.vehicle);
   const [key, setKey] = useState();
 
-  const [search, setSearch] = useState('');
+  // const [search, setSearch] = useState('');
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getAllVehicles());
@@ -74,13 +74,13 @@ const Search = ({navigation}) => {
           <Icon name="filter" color="black" size={30} />
           <Text>Filter Search</Text>
         </TouchableOpacity>
-        <ScrollView
-          style={styles.dataVehicles}
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}>
-          <SafeAreaView>
+        <SafeAreaView>
+          <ScrollView
+            style={styles.dataVehicles}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}>
             {!key ? (
-              <ScrollView>
+              <Box>
                 {vehicle.allVehicle.map((datas, idx) => {
                   return (
                     <TouchableOpacity
@@ -128,9 +128,9 @@ const Search = ({navigation}) => {
                     </TouchableOpacity>
                   );
                 })}
-              </ScrollView>
+              </Box>
             ) : (
-              <ScrollView>
+              <Box>
                 {vehicle.search.map((datas, idx) => {
                   return (
                     <TouchableOpacity
@@ -177,10 +177,10 @@ const Search = ({navigation}) => {
                     </TouchableOpacity>
                   );
                 })}
-              </ScrollView>
+              </Box>
             )}
-          </SafeAreaView>
-        </ScrollView>
+          </ScrollView>
+        </SafeAreaView>
       </View>
     </View>
   );

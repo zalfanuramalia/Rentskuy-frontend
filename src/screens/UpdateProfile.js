@@ -17,6 +17,7 @@ import {
   Radio,
   Box,
   Spinner,
+  ScrollView,
 } from 'native-base';
 import {useDispatch, useSelector} from 'react-redux';
 import {getProfile, updateProfile} from '../redux/actions/auth';
@@ -84,7 +85,7 @@ const UpdateProfile = ({route}) => {
   };
   return (
     <NativeBaseProvider>
-      <Box style={styles.main}>
+      <ScrollView style={styles.main}>
         <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
           <View flexDirection="row">
             <Icon name="chevron-left" size={20} />
@@ -251,7 +252,7 @@ const UpdateProfile = ({route}) => {
             </Button>
           </TouchableOpacity>
         </Box>
-      </Box>
+      </ScrollView>
     </NativeBaseProvider>
   );
 };
@@ -260,9 +261,10 @@ const styles = StyleSheet.create({
   main: {
     paddingHorizontal: 20,
     marginTop: 20,
+    marginBottom: 20,
   },
   update: {
-    marginTop: 40,
+    marginTop: 20,
   },
   text: {
     paddingHorizontal: 10,
@@ -274,19 +276,17 @@ const styles = StyleSheet.create({
     height: 100,
   },
   image: {
-    flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
-    marginTop: 50,
+    marginTop: 20,
   },
   button: {
-    width: '50%',
+    width: '75%',
     color: 'black',
     marginTop: 10,
     backgroundColor: 'wheat',
-    marginLeft: 30,
+    marginLeft: 10,
   },
   radio: {
     flexDirection: 'row',

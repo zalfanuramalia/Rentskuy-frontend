@@ -17,7 +17,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import onLogin from '../redux/actions/auth';
 import {useNavigation} from '@react-navigation/native';
 import allStyles from '../assets/allStyles';
-import {Box} from 'native-base';
+import {Box, ScrollView} from 'native-base';
 import ModalPoup from '../components/Modalpoup';
 
 const Login = () => {
@@ -43,83 +43,85 @@ const Login = () => {
     // setControl(true);
   };
   return (
-    <View style={styles.container}>
-      <Box style={styles.main}>
-        <Image
-          source={require('../../images/bg-login.png')}
-          resizeMode="cover"
-          style={styles.bg}
-        />
-        <Box style={styles.forms}>
-          <Text style={styles.text}>LET’S EXPLORE THE WORLDS</Text>
-          <Box style={styles.form}>
-            {auth.errMsg && (
-              <View style={styles.err}>
-                <Text style={styles.texterr}>Wrong email or password!</Text>
-              </View>
-            )}
-            <TextInput
-              style={styles.input}
-              onChangeText={setEmail}
-              value={email}
-              placeholder="Email"
-              placeholderTextColor="grey"
-            />
-            <TextInput
-              style={styles.input}
-              onChangeText={setPassword}
-              value={password}
-              secureTextEntry={true}
-              placeholder="Password"
-              placeholderTextColor="grey"
-            />
-            <TouchableOpacity
-              onPress={() => navigation.navigate('Forgot Password')}>
-              <Text style={styles.forgot}>Forgot Password ?</Text>
-            </TouchableOpacity>
-          </Box>
-          <View style={styles.login}>
-            <Button style={styles.buttons} title="Login" onPress={goLogin} />
-            {!auth.err && (
-              <ModalPoup visible={visible}>
-                <View alignItems="center">
-                  <View style={styles.header}>
-                    <TouchableOpacity onPress={() => setVisible(false)}>
-                      <Image
-                        source={require('../../images/x.png')}
-                        style={styles.false}
-                      />
-                    </TouchableOpacity>
+    <ScrollView>
+      <View style={styles.container}>
+        <Box style={styles.main}>
+          <Image
+            source={require('../../images/bg-login.png')}
+            resizeMode="cover"
+            style={styles.bg}
+          />
+          <Box style={styles.forms}>
+            <Text style={styles.text}>LET’S EXPLORE THE WORLDS</Text>
+            <Box style={styles.form}>
+              {auth.errMsg && (
+                <View style={styles.err}>
+                  <Text style={styles.texterr}>Wrong email or password!</Text>
+                </View>
+              )}
+              <TextInput
+                style={styles.input}
+                onChangeText={setEmail}
+                value={email}
+                placeholder="Email"
+                placeholderTextColor="grey"
+              />
+              <TextInput
+                style={styles.input}
+                onChangeText={setPassword}
+                value={password}
+                secureTextEntry={true}
+                placeholder="Password"
+                placeholderTextColor="grey"
+              />
+              <TouchableOpacity
+                onPress={() => navigation.navigate('Forgot Password')}>
+                <Text style={styles.forgot}>Forgot Password ?</Text>
+              </TouchableOpacity>
+            </Box>
+            <View style={styles.login}>
+              <Button style={styles.buttons} title="Login" onPress={goLogin} />
+              {!auth.err && (
+                <ModalPoup visible={visible}>
+                  <View alignItems="center">
+                    <View style={styles.header}>
+                      <TouchableOpacity onPress={() => setVisible(false)}>
+                        <Image
+                          source={require('../../images/x.png')}
+                          style={styles.false}
+                        />
+                      </TouchableOpacity>
+                    </View>
                   </View>
-                </View>
-                <View alignItems="center">
-                  <Image
-                    source={require('../../images/success.png')}
-                    style={styles.success}
-                  />
-                </View>
+                  <View alignItems="center">
+                    <Image
+                      source={require('../../images/success.png')}
+                      style={styles.success}
+                    />
+                  </View>
 
-                <Text style={styles.infosuccess}>Login Success!</Text>
-              </ModalPoup>
-            )}
-          </View>
-          <View style={styles.google}>
-            <Button
-              style={`${styles.buttons} `}
-              title="Login with Google"
-              onPress={() => Alert.alert('Login Success')}
-            />
-          </View>
-          <View style={styles.signup}>
-            <Text style={styles.textlink}>Dont have account? </Text>
-            <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-              <Text style={styles.link}>Sign up </Text>
-            </TouchableOpacity>
-            <Text style={styles.textlink}>now</Text>
-          </View>
+                  <Text style={styles.infosuccess}>Login Success!</Text>
+                </ModalPoup>
+              )}
+            </View>
+            <View style={styles.google}>
+              <Button
+                style={`${styles.buttons} `}
+                title="Login with Google"
+                onPress={() => Alert.alert('Login Success')}
+              />
+            </View>
+            <View style={styles.signup}>
+              <Text style={styles.textlink}>Dont have account? </Text>
+              <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+                <Text style={styles.link}>Sign up </Text>
+              </TouchableOpacity>
+              <Text style={styles.textlink}>now</Text>
+            </View>
+          </Box>
         </Box>
-      </Box>
-    </View>
+      </View>
+    </ScrollView>
   );
 };
 

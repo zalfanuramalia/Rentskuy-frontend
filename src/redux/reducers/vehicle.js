@@ -9,7 +9,9 @@ const detailState = {
   err: false,
   errMsg: '',
   successMsg: null,
-  search: '',
+  search: [],
+  keyword: '',
+  dataFilter: {},
 };
 
 const detail = (state = detailState, action) => {
@@ -61,7 +63,14 @@ const detail = (state = detailState, action) => {
       state.search = data.results;
       state.pageInfo = data.pageInfo;
       state.isLoading = false;
-      return {...state};
+      state.dataFilter = action.dataFilter;
+      return {
+        ...state,
+        keywoard: action.keywoard,
+        isError: false,
+        isLoading: false,
+        errMsg: '',
+      };
     }
     case 'GET_SEARCH_REJECTED': {
       state.isLoading = false;
