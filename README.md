@@ -10,7 +10,7 @@ git clone https://github.com/zalfanuramalia/Rentskuy-frontend.git
 ```
 2. Install Module
 ```
-npm install
+yarn add
 ```
 4. Create .env file adjust its contents with .env.example file.
 3. Run app
