@@ -15,5 +15,5 @@ npm install
 4. Create .env file adjust its contents with .env.example file.
 3. Run app
 ```
-npm run start
+yarn android
 ```
