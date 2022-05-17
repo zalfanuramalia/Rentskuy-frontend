@@ -6,60 +6,151 @@ import {
   SafeAreaView,
   TextInput,
   Alert,
+  TouchableOpacity,
+  Image,
 } from 'react-native';
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {login} from '../image/index';
 import Button from '../components/Button';
 import IconFA from 'react-native-vector-icons/FontAwesome';
+import {useDispatch, useSelector} from 'react-redux';
+import onLogin from '../redux/actions/auth';
+import {useNavigation} from '@react-navigation/native';
+import allStyles from '../assets/allStyles';
+import {Box, ScrollView} from 'native-base';
+import ModalPoup from '../components/Modalpoup';
 
 const Login = () => {
-  const [number, onChangeNumber] = React.useState(null);
+  const auth = useSelector(state => state.auth);
+  const [visible, setVisible] = React.useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const dispatch = useDispatch();
+  const [control, setControl] = useState(false);
+
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    dispatch({
+      type: 'CLEAR_ERR',
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const goLogin = () => {
+    setVisible(true);
+    dispatch(onLogin(email, password));
+    // setControl(true);
+  };
   return (
-    <View style={styles.container}>
-      <ImageBackground source={login} resizeMode="cover" style={styles.image}>
-        <Text style={styles.text}>LET’S EXPLORE THE WORLDS</Text>
-        <SafeAreaView style={styles.form}>
-          <TextInput
-            style={styles.input}
-            onChangeText={onChangeNumber}
-            value={number}
-            placeholder="Username"
+    <ScrollView>
+      <View style={styles.container}>
+        <Box style={styles.main}>
+          <Image
+            source={require('../../images/bg-login.png')}
+            resizeMode="cover"
+            style={styles.bg}
           />
-          <TextInput
-            style={styles.input}
-            onChangeText={onChangeNumber}
-            value={number}
-            placeholder="Password"
-            keyboardType="numeric"
-          />
-          <Text style={styles.forgot}>Forgot Password ?</Text>
-        </SafeAreaView>
-        <View style={styles.login}>
-          <Button
-            style={styles.buttons}
-            title="Login"
-            onPress={() => Alert.alert('Login Success')}
-          />
-        </View>
-        <View style={styles.google}>
-          <Button
-            style={`${styles.buttons} `}
-            title="Login with Google"
-            onPress={() => Alert.alert('Login Success')}
-          />
-        </View>
-        <Text style={styles.signup}>Dont have account? Sign up now</Text>
-      </ImageBackground>
-    </View>
+          <Box style={styles.forms}>
+            <Text style={styles.text}>LET’S EXPLORE THE WORLDS</Text>
+            <Box style={styles.form}>
+              {auth.errMsg && (
+                <View style={styles.err}>
+                  <Text style={styles.texterr}>Wrong email or password!</Text>
+                </View>
+              )}
+              <TextInput
+                style={styles.input}
+                onChangeText={setEmail}
+                value={email}
+                placeholder="Email"
+                placeholderTextColor="grey"
+              />
+              <TextInput
+                style={styles.input}
+                onChangeText={setPassword}
+                value={password}
+                secureTextEntry={true}
+                placeholder="Password"
+                placeholderTextColor="grey"
+              />
+              <TouchableOpacity
+                onPress={() => navigation.navigate('Forgot Password')}>
+                <Text style={styles.forgot}>Forgot Password ?</Text>
+              </TouchableOpacity>
+            </Box>
+            <View style={styles.login}>
+              <Button style={styles.buttons} title="Login" onPress={goLogin} />
+              {!auth.err && (
+                <ModalPoup visible={visible}>
+                  <View alignItems="center">
+                    <View style={styles.header}>
+                      <TouchableOpacity onPress={() => setVisible(false)}>
+                        <Image
+                          source={require('../../images/x.png')}
+                          style={styles.false}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                  <View alignItems="center">
+                    <Image
+                      source={require('../../images/success.png')}
+                      style={styles.success}
+                    />
+                  </View>
+
+                  <Text style={styles.infosuccess}>Login Success!</Text>
+                </ModalPoup>
+              )}
+            </View>
+            <View style={styles.google}>
+              <Button
+                style={`${styles.buttons} `}
+                title="Login with Google"
+                onPress={() => Alert.alert('Login Success')}
+              />
+            </View>
+            <View style={styles.signup}>
+              <Text style={styles.textlink}>Dont have account? </Text>
+              <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+                <Text style={styles.link}>Sign up </Text>
+              </TouchableOpacity>
+              <Text style={styles.textlink}>now</Text>
+            </View>
+          </Box>
+        </Box>
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  main: {
+    position: 'relative',
   },
-  image: {
-    flex: 1,
+  forms: {
+    position: 'absolute',
+  },
+  false: {
+    width: 30,
+    height: 30,
+  },
+  header: {
+    width: '100%',
+    height: 40,
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+  },
+  success: {
+    height: 150,
+    width: 150,
+    marginVertical: 10,
+  },
+  infosuccess: {
+    marginVertical: 30,
+    fontSize: 20,
+    textAlign: 'center',
   },
   text: {
     color: 'white',
@@ -75,7 +166,6 @@ const styles = StyleSheet.create({
   },
   input: {
     margin: 12,
-    borderWidth: 1,
     padding: 10,
     borderRadius: 10,
     backgroundColor: '#DFDEDE',
@@ -83,7 +173,7 @@ const styles = StyleSheet.create({
     height: 50,
   },
   form: {
-    marginTop: 200,
+    marginTop: 100,
   },
   forgot: {
     color: 'white',
@@ -96,10 +186,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
     borderBottomWidth: 1,
     borderBottomColor: 'white',
-    marginEnd: 235,
+    marginEnd: 255,
   },
   login: {
     marginHorizontal: 15,
+    marginVertical: 15,
   },
   google: {
     marginHorizontal: 15,
@@ -112,9 +203,39 @@ const styles = StyleSheet.create({
   },
   signup: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     marginHorizontal: 80,
-    marginTop: 20,
+    marginTop: 15,
+    alignItems: 'center',
+    color: 'white',
+  },
+  textlink: {
+    color: 'white',
+  },
+  link: {
+    color: 'white',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    borderBottomWidth: 0.5,
+    borderBottomColor: 'white',
+  },
+  err: {
+    backgroundColor: 'gray',
+    borderWidth: 1,
+    borderColor: 'black',
+    padding: 15,
+    marginHorizontal: 15,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  texterr: {
+    color: 'white',
+  },
+  bg: {
+    width: 502,
+    height: 881,
   },
 });
 

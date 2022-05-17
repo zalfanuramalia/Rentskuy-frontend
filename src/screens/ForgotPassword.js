@@ -6,43 +6,115 @@ import {
   SafeAreaView,
   TextInput,
   Alert,
+  TouchableOpacity,
+  Image,
 } from 'react-native';
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {fp} from '../image/index';
 import Button from '../components/Button';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import {useNavigation} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
+import {forgotpass} from '../redux/actions/password';
+import {Box} from 'native-base';
+import ModalPoup from '../components/Modalpoup';
+import PushNotification from 'react-native-push-notification';
 
-const Signup = () => {
-  const [number, onChangeNumber] = React.useState(null);
+const ForgotPassword = () => {
+  const {password} = useSelector(state => state);
+  const [email, setEmail] = useState('');
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const [visible, setVisible] = React.useState(false);
+  const [control, setControl] = useState(false);
+
+  useEffect(() => {
+    dispatch({
+      type: 'CLEAR_MESSAGE',
+    });
+  }, [dispatch]);
+
+  const localNotif = () => {
+    PushNotification.localNotification({
+      channelId: 'rent-skuy',
+      message:
+        "Your OTP has been sent. Please check your email! Don't give your OTP to anyone",
+      title: 'Reset Password Information',
+    });
+  };
+
+  const sendCode = () => {
+    setVisible(true);
+    dispatch(forgotpass(email));
+  };
+
+  const closeHandler = () => {
+    setVisible(false);
+    navigation.navigate('Reset Password');
+    localNotif();
+  };
   return (
     <View style={styles.container}>
-      <ImageBackground source={fp} resizeMode="cover" style={styles.image}>
-        <Text style={styles.text}>THAT’S OKAY, WE GOT YOUR BACK</Text>
-        <SafeAreaView style={styles.form}>
-          <Text style={styles.fp}>
-            Enter your email to get reset password code
-          </Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={onChangeNumber}
-            value={number}
-            placeholder="Enter your email address"
-          />
-        </SafeAreaView>
-        <View style={styles.login}>
-          <Button
-            style={styles.buttons}
-            title="Send Code"
-            onPress={() => Alert.alert('Login Success')}
-          />
-        </View>
-        <View style={styles.google}>
-          <Button
-            style={`${styles.buttons} `}
-            title="Resend Code"
-            onPress={() => Alert.alert('Login Success')}
-          />
-        </View>
-      </ImageBackground>
+      <Box style={styles.main}>
+        <Image source={fp} resizeMode="cover" style={styles.bg} />
+        <Box style={styles.forms}>
+          <View>
+            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+              <View style={styles.back}>
+                <Icon name="chevron-left" size={30} color="white" />
+                <Text style={styles.textback}>Back</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <Text style={styles.text}>THAT’S OKAY, WE GOT YOUR BACK</Text>
+          <SafeAreaView style={styles.form}>
+            {password.err && (
+              <View style={styles.success}>
+                <Text style={styles.textsuccess}>{password.errMsg}</Text>
+              </View>
+            )}
+            <Text style={styles.fp}>
+              Enter your email to get reset password code
+            </Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={setEmail}
+              value={email}
+              placeholder="Enter your email address"
+              placeholderTextColor="grey"
+            />
+            <View style={styles.login}>
+              <Button
+                style={styles.buttons}
+                title="Send Code"
+                onPress={sendCode}
+              />
+            </View>
+            {password.successMsg !== '' && (
+              <ModalPoup visible={visible}>
+                <View alignItems="center">
+                  <View style={styles.header}>
+                    <TouchableOpacity onPress={closeHandler}>
+                      <Image
+                        source={require('../../images/x.png')}
+                        style={styles.false}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+                <View alignItems="center">
+                  <Image
+                    source={require('../../images/success.png')}
+                    style={styles.successes}
+                  />
+                </View>
+
+                <Text style={styles.infosuccess}>{password.successMsg}</Text>
+              </ModalPoup>
+            )}
+          </SafeAreaView>
+        </Box>
+      </Box>
     </View>
   );
 };
@@ -51,8 +123,41 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  image: {
-    flex: 1,
+  bg: {
+    width: 502,
+    height: 881,
+  },
+  main: {
+    position: 'relative',
+  },
+  forms: {
+    position: 'absolute',
+  },
+  success: {
+    backgroundColor: 'gray',
+    borderWidth: 1,
+    borderColor: 'black',
+    padding: 15,
+    marginHorizontal: 15,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  textsuccess: {
+    color: 'white',
+  },
+  back: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    marginTop: 30,
+  },
+  textback: {
+    color: 'white',
+    marginLeft: 10,
+    fontSize: 18,
   },
   text: {
     color: 'white',
@@ -66,7 +171,6 @@ const styles = StyleSheet.create({
   },
   input: {
     margin: 5,
-    borderWidth: 1,
     padding: 10,
     borderRadius: 10,
     backgroundColor: '#DFDEDE',
@@ -75,10 +179,11 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   form: {
-    marginTop: 180,
+    marginTop: 100,
+    marginLeft: 5,
   },
   login: {
-    marginHorizontal: 8,
+    marginHorizontal: 5,
     marginTop: 30,
   },
   google: {
@@ -97,6 +202,26 @@ const styles = StyleSheet.create({
     marginTop: 20,
     color: 'white',
   },
+  false: {
+    width: 30,
+    height: 30,
+  },
+  header: {
+    width: '100%',
+    height: 40,
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+  },
+  successes: {
+    height: 150,
+    width: 150,
+    marginVertical: 10,
+  },
+  infosuccess: {
+    marginVertical: 30,
+    fontSize: 20,
+    textAlign: 'center',
+  },
 });
 
-export default Signup;
+export default ForgotPassword;

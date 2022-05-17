@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "353916867796",
+    "project_id": "vehiclesrent-c3f3a",
+    "storage_bucket": "vehiclesrent-c3f3a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:353916867796:android:e608b401f7bdb3b3121741",
+        "android_client_info": {
+          "package_name": "com.zalfa.rentskuy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "353916867796-7d79892n13umqa1rm7fplkufbve8q4mo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.zalfa.rentskuy",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "353916867796-3rln04cprolpkq5qq9taeuuhsghhej9t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6c842nmIJLDNvPQA5EJJ6-Sfjpox5M9A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "353916867796-3rln04cprolpkq5qq9taeuuhsghhej9t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
